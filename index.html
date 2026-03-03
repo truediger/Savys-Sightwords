@@ -9,575 +9,282 @@
 <title>Sight Word Stars</title>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  body {
-    font-family: 'Fredoka', sans-serif;
-    min-height: 100vh;
-    background: linear-gradient(180deg, #FFF5E1 0%, #FFE0F0 50%, #E0F0FF 100%);
-    overflow-x: hidden;
-  }
-  button { font-family: 'Fredoka', sans-serif; -webkit-appearance: none; }
-  button:active { transform: scale(0.97) !important; }
-  input { font-family: 'Fredoka', sans-serif; }
-  .container { max-width: 500px; margin: 0 auto; padding: 8px 16px 40px; }
-  .card-box { background: white; border-radius: 20px; padding: 20px; margin-bottom: 16px; box-shadow: 0 8px 30px rgba(0,0,0,0.08); }
-  .btn {
-    font-family: 'Fredoka', sans-serif; font-size: 16px; font-weight: 500;
-    padding: 10px 18px; border-radius: 14px; border: none; color: white;
-    cursor: pointer; transition: transform 0.15s;
-  }
-  .btn:active { transform: scale(0.97); }
-  .week-btn {
-    font-family: 'Fredoka', sans-serif; font-size: 15px; font-weight: 600;
-    width: 44px; height: 44px; border-radius: 12px; cursor: pointer; transition: all 0.2s;
-  }
-  .progress-bar { width: 200px; height: 18px; border-radius: 12px; background: #e0e0e0; overflow: hidden; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); }
-  .progress-fill { height: 100%; border-radius: 12px; background: linear-gradient(90deg, #FFD700, #FF6B6B, #4ECDC4); transition: width 0.5s ease; }
-  .gradient-title {
-    font-size: 32px; font-weight: 700;
-    background: linear-gradient(135deg, #667eea, #e17055, #00b894);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text; margin: 4px 0;
-  }
-  @keyframes confettiFall {
-    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
-  }
-  @keyframes bounceIn { 0% { transform: scale(0); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
-  @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-  @keyframes wiggle { 0%,100% { transform: rotate(0deg); } 25% { transform: rotate(-5deg); } 75% { transform: rotate(5deg); } }
-  .float { animation: float 3s ease-in-out infinite; }
-  .wiggle { animation: wiggle 2s ease-in-out infinite; }
-  .hidden { display: none !important; }
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Fredoka',sans-serif;min-height:100vh;background:linear-gradient(180deg,#FFF5E1 0%,#FFE0F0 50%,#E0F0FF 100%);overflow-x:hidden}
+button{font-family:'Fredoka',sans-serif;-webkit-appearance:none}
+button:active{transform:scale(0.97)!important}
+input{font-family:'Fredoka',sans-serif}
+.container{max-width:500px;margin:0 auto;padding:8px 16px 40px}
+.card-box{background:#fff;border-radius:20px;padding:20px;margin-bottom:16px;box-shadow:0 8px 30px rgba(0,0,0,.08)}
+.btn{font-family:'Fredoka',sans-serif;font-size:16px;font-weight:500;padding:10px 18px;border-radius:14px;border:none;color:#fff;cursor:pointer;transition:transform .15s}
+.btn:active{transform:scale(.97)}
+.week-btn{font-family:'Fredoka',sans-serif;font-size:15px;font-weight:600;width:44px;height:44px;border-radius:12px;cursor:pointer;transition:all .2s}
+.progress-bar{width:200px;height:18px;border-radius:12px;background:#e0e0e0;overflow:hidden;box-shadow:inset 0 2px 4px rgba(0,0,0,.1)}
+.progress-fill{height:100%;border-radius:12px;background:linear-gradient(90deg,#FFD700,#FF6B6B,#4ECDC4);transition:width .5s ease}
+.gradient-title{font-size:32px;font-weight:700;background:linear-gradient(135deg,#667eea,#e17055,#00b894);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin:4px 0}
+.game-btn{padding:16px;border:none;cursor:pointer;text-align:center;background:#fff;border-radius:20px;box-shadow:0 8px 25px rgba(0,0,0,.08);transition:transform .2s}
+.game-btn:active{transform:scale(.97)}
+@keyframes confettiFall{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+@keyframes bounceIn{0%{transform:scale(0)}50%{transform:scale(1.2)}100%{transform:scale(1)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes wiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-5deg)}75%{transform:rotate(5deg)}}
+.float{animation:float 3s ease-in-out infinite}
+.wiggle{animation:wiggle 2s ease-in-out infinite}
+.hidden{display:none!important}
 </style>
 </head>
 <body>
 
-<!-- HEADER (always visible) -->
-<div style="text-align:center; padding:24px 16px 8px;">
-  <button id="homeBtn" class="btn hidden" style="background:white; color:#636e72; font-size:18px; font-weight:600; padding:12px 20px; border-radius:16px; box-shadow:0 4px 14px rgba(0,0,0,0.1); margin-bottom:8px;" onclick="goHome()">← Home</button>
+<div style="text-align:center;padding:24px 16px 8px">
+  <button id="homeBtn" class="btn hidden" style="background:#fff;color:#636e72;font-size:18px;font-weight:600;padding:12px 20px;border-radius:16px;box-shadow:0 4px 14px rgba(0,0,0,.1);margin-bottom:8px" onclick="goHome()">← Home</button>
   <div class="float"><span style="font-size:44px">📚</span></div>
   <h1 class="gradient-title">Sight Word Stars</h1>
-  <p style="font-size:14px; color:#636e72;">1st Grade Sight Words Practice ✨</p>
+  <p style="font-size:14px;color:#636e72">1st Grade Sight Words Practice ✨</p>
 </div>
 
 <div class="container">
-
-  <!-- HOME SCREEN -->
   <div id="homeScreen">
-    <!-- Week Picker -->
     <div class="card-box">
-      <h2 style="font-size:20px; font-weight:600; color:#2d3436; margin-bottom:12px;">📅 Pick Your Weeks</h2>
-      <div id="weekButtons" style="display:flex; flex-wrap:wrap; gap:8px;"></div>
-      <div style="display:flex; gap:10px; margin-top:12px;">
-        <button class="btn" style="background:#4ECDC4; font-size:14px; padding:8px 16px; border-radius:12px;" onclick="selectAllWeeks()">✅ Select All</button>
-        <button class="btn" style="background:#b2bec3; font-size:14px; padding:8px 16px; border-radius:12px;" onclick="clearWeeks()">✖ Clear All</button>
+      <h2 style="font-size:20px;font-weight:600;color:#2d3436;margin-bottom:12px">📅 Pick Your Weeks</h2>
+      <div id="weekButtons" style="display:flex;flex-wrap:wrap;gap:8px"></div>
+      <div style="display:flex;gap:10px;margin-top:12px">
+        <button class="btn" style="background:#4ECDC4;font-size:14px;padding:8px 16px;border-radius:12px" onclick="selectAllWeeks()">✅ Select All</button>
+        <button class="btn" style="background:#b2bec3;font-size:14px;padding:8px 16px;border-radius:12px" onclick="clearWeeks()">✖ Clear All</button>
       </div>
-      <p id="weekInfo" style="font-size:13px; color:#b2bec3; margin-top:10px;"></p>
+      <p id="weekInfo" style="font-size:13px;color:#b2bec3;margin-top:10px"></p>
     </div>
-    <!-- Game Selector -->
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
-      <button class="card-box" style="padding:20px; border:none; cursor:pointer; text-align:center;" onclick="startGame('flashcards')">
-        <div style="font-size:40px; margin-bottom:8px;" class="wiggle">🃏</div>
-        <div style="font-size:17px; font-weight:600; color:#667eea;">Flashcards</div>
-        <div style="font-size:12px; color:#b2bec3; margin-top:4px;">Read & recognize words</div>
-      </button>
-      <button class="card-box" style="padding:20px; border:none; cursor:pointer; text-align:center;" onclick="startGame('spelling')">
-        <div style="font-size:40px; margin-bottom:8px;" class="wiggle">✏️</div>
-        <div style="font-size:17px; font-weight:600; color:#e17055;">Spelling Bee</div>
-        <div style="font-size:12px; color:#b2bec3; margin-top:4px;">Listen & type the word</div>
-      </button>
-      <button class="card-box" style="padding:20px; border:none; cursor:pointer; text-align:center;" onclick="startGame('match')">
-        <div style="font-size:40px; margin-bottom:8px;" class="wiggle">🧩</div>
-        <div style="font-size:17px; font-weight:600; color:#00b894;">Memory Match</div>
-        <div style="font-size:12px; color:#b2bec3; margin-top:4px;">Find the matching pairs</div>
-      </button>
-      <button class="card-box" style="padding:20px; border:none; cursor:pointer; text-align:center;" onclick="startGame('builder')">
-        <div style="font-size:40px; margin-bottom:8px;" class="wiggle">🔤</div>
-        <div style="font-size:17px; font-weight:600; color:#6c5ce7;">Word Builder</div>
-        <div style="font-size:12px; color:#b2bec3; margin-top:4px;">Unscramble the letters</div>
-      </button>
-    </div>
-    <!-- Voice Picker -->
-    <div class="card-box" style="margin-top:14px; text-align:center; padding:16px;">
-      <div style="display:flex; align-items:center; gap:8px; justify-content:center;">
-        <span style="font-size:14px; color:#636e72;">🗣️ Voice:</span>
-        <select id="voiceSelect" onchange="changeVoice()" style="font-size:14px; padding:6px 10px; border-radius:10px; border:2px solid #dfe6e9; background:white; color:#2d3436; max-width:200px; font-family:'Fredoka',sans-serif;"></select>
+    <div id="gameGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:14px"></div>
+    <div class="card-box" style="margin-top:14px;text-align:center;padding:16px">
+      <div style="display:flex;align-items:center;gap:8px;justify-content:center">
+        <span style="font-size:14px;color:#636e72">🗣️ Voice:</span>
+        <select id="voiceSelect" onchange="changeVoice()" style="font-size:14px;padding:6px 10px;border-radius:10px;border:2px solid #dfe6e9;background:#fff;color:#2d3436;max-width:200px;font-family:'Fredoka',sans-serif"></select>
       </div>
     </div>
-    <!-- Word Preview -->
-    <div class="card-box" style="margin-top:16px;">
-      <h3 style="font-size:16px; font-weight:600; color:#2d3436; margin-bottom:8px;">👀 Words to Practice</h3>
-      <div id="wordPreview" style="display:flex; flex-wrap:wrap; gap:6px;"></div>
+    <div class="card-box" style="margin-top:16px">
+      <h3 style="font-size:16px;font-weight:600;color:#2d3436;margin-bottom:8px">👀 Words to Practice</h3>
+      <div id="wordPreview" style="display:flex;flex-wrap:wrap;gap:6px"></div>
     </div>
   </div>
 
-  <!-- FLASHCARD SCREEN -->
-  <div id="flashcardScreen" class="hidden" style="text-align:center;">
-    <p id="fcProgress" style="font-size:16px; color:#7f8c8d; margin-bottom:8px;"></p>
-    <div id="fcBar" style="display:flex; align-items:center; gap:10px; justify-content:center; margin:4px 0;"></div>
-    <div id="fcCard" onclick="flipCard()" style="margin:24px auto; width:280px; height:200px; border-radius:24px; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 12px 40px rgba(0,0,0,0.15); transition:all 0.4s ease;"></div>
-    <div id="fcButtons" class="hidden" style="display:flex; gap:16px; justify-content:center; margin-top:16px;"></div>
-  </div>
+  <div id="gameScreen" class="hidden" style="text-align:center"></div>
 
-  <!-- SPELLING SCREEN -->
-  <div id="spellingScreen" class="hidden" style="text-align:center;">
-    <p id="spProgress" style="font-size:16px; color:#7f8c8d; margin-bottom:8px;"></p>
-    <div id="spBar" style="display:flex; align-items:center; gap:10px; justify-content:center; margin:4px 0;"></div>
-    <div style="margin:24px auto; padding:24px; max-width:340px;">
-      <div style="font-size:64px; cursor:pointer;" onclick="speakCurrentWord()">🔊</div>
-      <p style="font-size:18px; color:#636e72; margin:16px 0;">Listen and spell the word!</p>
-      <div id="spHint" class="hidden" style="font-size:28px; color:#b2bec3; letter-spacing:8px; margin-bottom:16px;"></div>
-      <input id="spInput" type="text" placeholder="Type the word..." autocomplete="off" autocapitalize="none" style="font-size:32px; text-align:center; padding:12px 20px; border-radius:16px; border:3px solid #dfe6e9; outline:none; width:100%; max-width:280px; background:white; transition:all 0.3s;">
-      <div style="display:flex; gap:12px; justify-content:center; margin-top:20px;">
-        <button class="btn" style="background:#45B7D1;" onclick="speakCurrentWord()">🔊 Again</button>
-        <button class="btn" style="background:#f39c12;" onclick="showSpellingHint()">💡 Hint</button>
-        <button class="btn" style="background:#2ecc71;" onclick="checkSpelling()">✅ Check</button>
-      </div>
-      <p id="spFeedback" style="font-size:24px; margin-top:16px;"></p>
+  <div id="resultsScreen" class="hidden" style="text-align:center;padding:40px 0">
+    <div style="font-size:72px;animation:bounceIn .6s ease">🏆</div>
+    <h2 style="font-size:32px;font-weight:700;color:#2d3436;margin:16px 0 8px">Amazing Job!</h2>
+    <p id="resultText" style="font-size:20px;color:#636e72"></p>
+    <div style="display:flex;gap:12px;justify-content:center;margin-top:24px">
+      <button class="btn" style="background:#667eea" onclick="goHome()">🏠 Home</button>
+      <button class="btn" style="background:#00b894" onclick="replayGame()">🔄 Play Again</button>
     </div>
   </div>
 
-  <!-- MATCH SCREEN -->
-  <div id="matchScreen" class="hidden" style="text-align:center;">
-    <p style="font-size:16px; color:#7f8c8d; margin-bottom:8px;">Match the words with their twins!</p>
-    <div id="matchBar" style="display:flex; align-items:center; gap:10px; justify-content:center; margin:4px 0;"></div>
-    <div id="matchGrid" style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px; max-width:400px; margin:20px auto; padding:0 8px;"></div>
-  </div>
-
-  <!-- BUILDER SCREEN -->
-  <div id="builderScreen" class="hidden" style="text-align:center;">
-    <p id="blProgress" style="font-size:16px; color:#7f8c8d; margin-bottom:8px;"></p>
-    <div id="blBar" style="display:flex; align-items:center; gap:10px; justify-content:center; margin:4px 0;"></div>
-    <div style="margin:20px auto;">
-      <div style="font-size:48px; cursor:pointer; margin-bottom:12px;" onclick="speakBuilderWord()">🔊</div>
-      <p style="font-size:16px; color:#636e72;">Tap the letters in the right order!</p>
-      <div id="blAnswer" style="display:flex; gap:8px; justify-content:center; margin:20px 0; min-height:60px; flex-wrap:wrap;"></div>
-      <div id="blLetters" style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap;"></div>
-      <p id="blFeedback" style="font-size:24px; margin-top:20px;"></p>
-    </div>
-  </div>
-
-  <!-- RESULTS SCREEN -->
-  <div id="resultsScreen" class="hidden" style="text-align:center; padding:40px 0;">
-    <div style="font-size:72px; animation:bounceIn 0.6s ease;">🏆</div>
-    <h2 style="font-size:32px; font-weight:700; color:#2d3436; margin:16px 0 8px;">Amazing Job!</h2>
-    <p id="resultText" style="font-size:20px; color:#636e72;"></p>
-    <div style="display:flex; gap:12px; justify-content:center; margin-top:24px;">
-      <button class="btn" style="background:#667eea;" onclick="goHome()">🏠 Home</button>
-      <button class="btn" style="background:#00b894;" onclick="replayGame()">🔄 Play Again</button>
-    </div>
-  </div>
-
-  <!-- CONFETTI CONTAINER -->
-  <div id="confetti" style="position:fixed; inset:0; pointer-events:none; z-index:999;" class="hidden"></div>
+  <div id="confetti" style="position:fixed;inset:0;pointer-events:none;z-index:999" class="hidden"></div>
 </div>
 
 <script>
-// ===== DATA =====
-const WORDS_BY_WEEK = {
-  1:["a","first","good","had","he","I","my","was"],
-  2:["and","find","for","just","many","one","she","then"],
-  3:["are","buy","little","said","too","up","will","you"],
-  4:["do","live","of","our","wants","what","with","your"],
-  5:["about","eat","how","make","out","put","takes","who"],
-  6:["by","call","could","know","some","there","were","would"],
-  7:["be","here","me","play","started","today","use","very"],
-  8:["jump","right","say","their","walk","way","where","why"],
-  9:["after","before","does","don't","grow","into","no","wash"],
-  10:["around","came","come","found","other","people","two","worked"],
-  11:["again","away","because","cold","fall","full","or","pretty"],
-  12:["any","done","laugh","long","more","pull","teacher","think"],
-  13:["another","gave","house","over","own","read","water","white"],
-  14:["always","began","better","gives","hurt","shall","should","things"],
-  15:["carry","draw","eight","even","goes","may","seven","shows"],
-  16:["animal","heads","keep","let's","point","something","voice","won't"],
-  17:["below","far","hear","hold","old","only","open","round"],
-  18:["air","different","drink","enough","never","small","through","under"],
-  19:["along","answer","children","going","mother","talk","upon","woman"],
-  20:["bring","eyes","family","girl","move","soon","together","warm"]
-};
+const W={1:["a","first","good","had","he","I","my","was"],2:["and","find","for","just","many","one","she","then"],3:["are","buy","little","said","too","up","will","you"],4:["do","live","of","our","wants","what","with","your"],5:["about","eat","how","make","out","put","takes","who"],6:["by","call","could","know","some","there","were","would"],7:["be","here","me","play","started","today","use","very"],8:["jump","right","say","their","walk","way","where","why"],9:["after","before","does","don't","grow","into","no","wash"],10:["around","came","come","found","other","people","two","worked"],11:["again","away","because","cold","fall","full","or","pretty"],12:["any","done","laugh","long","more","pull","teacher","think"],13:["another","gave","house","over","own","read","water","white"],14:["always","began","better","gives","hurt","shall","should","things"],15:["carry","draw","eight","even","goes","may","seven","shows"],16:["animal","heads","keep","let's","point","something","voice","won't"],17:["below","far","hear","hold","old","only","open","round"],18:["air","different","drink","enough","never","small","through","under"],19:["along","answer","children","going","mother","talk","upon","woman"],20:["bring","eyes","family","girl","move","soon","together","warm"]};
+
+const SENTENCES=[["I","had","a","good","first"],["she","said","you","are","little"],["he","will","find","one","too"],["what","do","you","want"],["who","could","call","by","there"],["come","here","and","play","today"],["they","walk","right","up"],["I","could","read","a","little"],["she","said","you","are","very","pretty"],["my","mother","and","I","walk","together"],["the","family","will","come","soon"],["you","should","always","be","good"],["I","think","we","should","go"],["she","gave","me","water"],["he","began","to","draw","eight"],["the","children","talk","and","laugh"],["we","bring","warm","eyes","along"],["the","girl","will","move","far","away"]];
+
+const CATEGORIES={"Action Words":["jump","walk","play","eat","make","call","draw","read","pull","carry","bring","move","grow","wash","drink","talk","laugh","find"],"Describing Words":["good","little","pretty","cold","full","long","old","small","different","warm","better","round","white","far"],"Question Words":["who","what","where","why","how"],
+"People Words":["mother","children","girl","family","woman","people","teacher","animal"]};
+
 const ANIMALS=["🐶","🐱","🐰","🦊","🐻","🐼","🦁","🐸","🐵","🦄","🐝","🐢","🦋","🐬","🐘"];
 const STAR_COLORS=["#FFD700","#FF6B6B","#4ECDC4","#45B7D1","#96CEB4","#FFEAA7","#DDA0DD","#98D8C8"];
 const CELEBRATIONS=["🎉","⭐","🌟","✨","🎊","💫","🏆","👏","🥳","💪"];
 const CARD_COLORS=["#FF6B6B","#4ECDC4","#45B7D1","#96CEB4","#DDA0DD","#FFEAA7"];
 
-// ===== STATE =====
-let selectedWeeks = [20];
-let gameWords = [];
-let currentGame = null;
-let selectedVoice = null;
+const GAMES=[
+  {id:"flashcards",emoji:"🃏",name:"Flashcards",desc:"Read & recognize",color:"#667eea"},
+  {id:"spelling",emoji:"✏️",name:"Spelling Bee",desc:"Listen & type",color:"#e17055"},
+  {id:"match",emoji:"🧩",name:"Memory Match",desc:"Find the pairs",color:"#00b894"},
+  {id:"builder",emoji:"🔤",name:"Word Builder",desc:"Unscramble letters",color:"#6c5ce7"},
+  {id:"bingo",emoji:"🎯",name:"Word Bingo",desc:"Listen & find it",color:"#fd79a8"},
+  {id:"sentence",emoji:"📝",name:"Sentences",desc:"Build a sentence",color:"#e84393"},
+  {id:"missing",emoji:"🔍",name:"Missing Letter",desc:"Fill the blank",color:"#0984e3"},
+  {id:"speed",emoji:"⚡",name:"Speed Read",desc:"Read it fast!",color:"#f39c12"},
+  {id:"read",emoji:"📖",name:"Read to Me",desc:"Practice reading",color:"#00cec9"},
+  {id:"category",emoji:"📦",name:"Word Sort",desc:"Sort into groups",color:"#a29bfe"}
+];
 
-// Game states
-let fc = { idx:0, score:0, flipped:false };
-let sp = { idx:0, score:0 };
-let mt = { cards:[], selected:[], matched:[], score:0, maxWords:6 };
-let bl = { idx:0, score:0, letters:[], answer:[], gameWords:[] };
+let selectedWeeks=[20],gameWords=[],currentGame=null,selectedVoice=null,activeTimer=null;
+const G=document.getElementById('gameScreen');
 
-// ===== UTILITIES =====
-function shuffle(a) { a=[...a]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function speak(t,r=0.8){if('speechSynthesis'in window){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.rate=r;u.pitch=1;if(selectedVoice)u.voice=selectedVoice;speechSynthesis.speak(u);}}
+function esc(s){return s.replace(/'/g,"\\'");}
+function progress(c,m){const p=m>0?(c/m)*100:0;return`<div style="display:flex;align-items:center;gap:10px;justify-content:center;margin:4px 0"><div class="progress-bar"><div class="progress-fill" style="width:${p}%"></div></div><span style="font-size:16px;font-weight:600;color:#2d3436">⭐ ${c}/${m}</span></div>`;}
+function confetti(){const e=document.getElementById('confetti');e.classList.remove('hidden');e.innerHTML=Array.from({length:20}).map(()=>`<div style="position:absolute;left:${Math.random()*100}%;top:-5%;font-size:${20+Math.random()*30}px;animation:confettiFall ${1.5+Math.random()*2}s ease-in forwards;animation-delay:${Math.random()*.5}s">${CELEBRATIONS[Math.floor(Math.random()*CELEBRATIONS.length)]}</div>`).join('');setTimeout(()=>{e.classList.add('hidden');e.innerHTML='';},4000);}
+function showScreen(id){['homeScreen','gameScreen','resultsScreen'].forEach(s=>document.getElementById(s).classList.add('hidden'));document.getElementById(id).classList.remove('hidden');document.getElementById('homeBtn').classList.toggle('hidden',id==='homeScreen');}
+function getWords(){let w=[];selectedWeeks.forEach(wk=>w.push(...W[wk]));return w;}
+function finish(score){if(activeTimer)clearInterval(activeTimer);confetti();setTimeout(()=>{document.getElementById('resultText').innerHTML=`You got <strong style="color:#2ecc71">${score}</strong> stars! ⭐`;showScreen('resultsScreen');},2000);}
 
-function speak(text, rate=0.8) {
-  if('speechSynthesis' in window) {
-    speechSynthesis.cancel();
-    const u=new SpeechSynthesisUtterance(text);
-    u.rate=rate; u.pitch=1.0;
-    if(selectedVoice) u.voice=selectedVoice;
-    speechSynthesis.speak(u);
-  }
+// Voice
+function loadVoices(){const v=speechSynthesis.getVoices().filter(v=>v.lang.startsWith('en'));const s=document.getElementById('voiceSelect');s.innerHTML='<option value="">Default</option>'+v.map(x=>`<option value="${x.name}">${x.name.replace(/Microsoft |Google |Apple /g,'')}</option>`).join('');const p=v.find(x=>/samantha|karen|daniel|moira|rishi|google.*female/i.test(x.name));if(p&&!selectedVoice){selectedVoice=p;s.value=p.name;}}
+function changeVoice(){const v=speechSynthesis.getVoices().filter(v=>v.lang.startsWith('en'));selectedVoice=v.find(x=>x.name===document.getElementById('voiceSelect').value)||null;speak("Hello!");}
+if('speechSynthesis'in window){loadVoices();speechSynthesis.onvoiceschanged=loadVoices;}
+
+// Home
+function goHome(){if(activeTimer)clearInterval(activeTimer);showScreen('homeScreen');renderHome();}
+function renderHome(){
+  const wb=document.getElementById('weekButtons');wb.innerHTML='';
+  for(let w=1;w<=20;w++){const b=document.createElement('button');b.className='week-btn';b.textContent=w;const a=selectedWeeks.includes(w);b.style.border=a?'none':'2px solid #dfe6e9';b.style.background=a?`linear-gradient(135deg,${STAR_COLORS[w%8]},${STAR_COLORS[(w+3)%8]})`:'white';b.style.color=a?'white':'#636e72';b.style.boxShadow=a?'0 4px 12px rgba(0,0,0,.15)':'none';b.onclick=()=>toggleWeek(w);wb.appendChild(b);}
+  document.getElementById('weekInfo').textContent=`${selectedWeeks.length} week${selectedWeeks.length>1?'s':''} • ${getWords().length} words`;
+  document.getElementById('gameGrid').innerHTML=GAMES.map(g=>`<button class="game-btn" onclick="startGame('${g.id}')"><div style="font-size:32px;margin-bottom:4px" class="wiggle">${g.emoji}</div><div style="font-size:14px;font-weight:600;color:${g.color}">${g.name}</div><div style="font-size:11px;color:#b2bec3;margin-top:2px">${g.desc}</div></button>`).join('');
+  document.getElementById('wordPreview').innerHTML=getWords().map(w=>`<span onclick="speak('${esc(w)}')" style="font-size:14px;padding:4px 10px;border-radius:8px;background:#f0f0f0;color:#2d3436;cursor:pointer">${w}</span>`).join('');
+}
+function toggleWeek(w){if(selectedWeeks.includes(w)){if(selectedWeeks.length>1)selectedWeeks=selectedWeeks.filter(x=>x!==w);}else selectedWeeks.push(w);renderHome();}
+function selectAllWeeks(){selectedWeeks=Array.from({length:20},(_,i)=>i+1);renderHome();}
+function clearWeeks(){selectedWeeks=[20];renderHome();}
+
+function startGame(mode){if(activeTimer)clearInterval(activeTimer);gameWords=shuffle(getWords());currentGame=mode;showScreen('gameScreen');({flashcards:g1,spelling:g2,match:g3,builder:g4,bingo:g5,sentence:g6,missing:g7,speed:g8,read:g9,category:g10})[mode]();}
+function replayGame(){startGame(currentGame);}
+
+// ===== 1. FLASHCARDS =====
+let fc;
+function g1(){fc={i:0,s:0,f:false};r1();}
+function r1(){
+  const w=gameWords[fc.i];
+  G.innerHTML=`<p style="font-size:16px;color:#7f8c8d;margin-bottom:8px">Card ${fc.i+1} of ${gameWords.length}</p>${progress(fc.s,gameWords.length)}<div onclick="f1()" style="margin:24px auto;width:280px;height:200px;border-radius:24px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 12px 40px rgba(0,0,0,.15);background:${fc.f?'linear-gradient(135deg,#a8edea,#fed6e3)':'linear-gradient(135deg,#667eea,#764ba2)'}">${fc.f?`<span style="font-size:56px;font-weight:600;color:#2d3436">${w}</span>`:'<div style="color:#fff;text-align:center"><span style="font-size:48px">🃏</span><p style="font-size:18px;margin-top:8px">Tap to reveal!</p></div>'}</div>${fc.f?`<div style="display:flex;gap:14px;justify-content:center;margin-top:16px;flex-wrap:wrap"><button class="btn" style="background:#45B7D1" onclick="speak('${esc(w)}')">🔊 Hear it</button><button class="btn" style="background:#2ecc71" onclick="fc.s++;n1()">✅ I know it!</button><button class="btn" style="background:#e74c3c" onclick="n1()">🔄 Practice</button></div>`:''}`;
+}
+function f1(){if(speechSynthesis)speechSynthesis.cancel();fc.f=true;r1();}
+function n1(){fc.f=false;if(fc.i+1>=gameWords.length)finish(fc.s);else{fc.i++;setTimeout(r1,200);}}
+
+// ===== 2. SPELLING =====
+let sp;
+function g2(){sp={i:0,s:0};r2();setTimeout(()=>speak(gameWords[0]),300);}
+function r2(){
+  const w=gameWords[sp.i];
+  G.innerHTML=`<p style="font-size:16px;color:#7f8c8d;margin-bottom:8px">Word ${sp.i+1} of ${gameWords.length}</p>${progress(sp.s,gameWords.length)}<div style="font-size:64px;cursor:pointer;margin:16px 0" onclick="speak('${esc(w)}')">🔊</div><p style="font-size:18px;color:#636e72;margin-bottom:16px">Listen and spell the word!</p><div id="spH" class="hidden" style="font-size:28px;color:#b2bec3;letter-spacing:8px;margin-bottom:16px"></div><input id="spI" type="text" placeholder="Type the word..." autocomplete="off" autocapitalize="none" style="font-size:32px;text-align:center;padding:12px 20px;border-radius:16px;border:3px solid #dfe6e9;outline:none;width:100%;max-width:280px;background:#fff"><div style="display:flex;gap:12px;justify-content:center;margin-top:20px"><button class="btn" style="background:#45B7D1" onclick="speak('${esc(w)}')">🔊 Again</button><button class="btn" style="background:#f39c12" onclick="document.getElementById('spH').textContent='${w[0]+w.slice(1).replace(/./g,' _')}';document.getElementById('spH').classList.remove('hidden')">💡 Hint</button><button class="btn" style="background:#2ecc71" onclick="c2()">✅ Check</button></div><p id="spF" style="font-size:24px;margin-top:16px"></p>`;
+  setTimeout(()=>{const e=document.getElementById('spI');if(e)e.focus();},100);
+}
+function c2(){
+  const inp=document.getElementById('spI'),w=gameWords[sp.i];
+  if(inp.value.trim().toLowerCase()===w.toLowerCase()){sp.s++;inp.style.border='3px solid #2ecc71';inp.style.background='#d5f5e3';document.getElementById('spF').innerHTML='<span style="color:#2ecc71">🎉 Correct!</span>';speak("Great job!");setTimeout(()=>{if(sp.i+1>=gameWords.length)finish(sp.s);else{sp.i++;r2();setTimeout(()=>speak(gameWords[sp.i]),300);}},1200);}
+  else{inp.style.border='3px solid #e74c3c';inp.style.background='#fadbd8';document.getElementById('spF').innerHTML='<span style="color:#e74c3c">Not quite — try again! 💪</span>';speak("Try again!");setTimeout(()=>{inp.style.border='3px solid #dfe6e9';inp.style.background='#fff';document.getElementById('spF').textContent='';},1000);}
+}
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&!document.getElementById('gameScreen').classList.contains('hidden')&&currentGame==='spelling')c2();});
+
+// ===== 3. MEMORY MATCH =====
+let mt;
+function g3(){const gw=gameWords.slice(0,Math.min(gameWords.length,6));mt={cards:shuffle(gw.flatMap(w=>[{id:w+'-t',word:w,type:'t'},{id:w+'-e',word:w,type:'e'}])),sel:[],matched:[],s:0,max:gw.length,gw};showScreen('gameScreen');r3();}
+function r3(){
+  G.innerHTML=`<p style="font-size:16px;color:#7f8c8d;margin-bottom:8px">Match the words!</p>${progress(mt.s,mt.max)}<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;max-width:400px;margin:20px auto;padding:0 8px">${mt.cards.map(c=>{const s=mt.sel.find(x=>x.id===c.id),m=mt.matched.includes(c.word),ci=mt.gw.indexOf(c.word);let bg=m?'#d5f5e3':s?CARD_COLORS[ci%6]:'linear-gradient(135deg,#667eea,#764ba2)',clr=s||m?'#2d3436':'#fff',op=m?.6:1;const txt=s||m?(c.type==='e'?ANIMALS[ci%15]+' '+c.word:c.word):'?';return`<div onclick="m3('${c.id}')" style="height:72px;border-radius:14px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:${bg};color:${clr};font-size:${s||m?18:28}px;font-weight:600;box-shadow:0 4px 12px rgba(0,0,0,.1);transition:all .3s;opacity:${op}">${txt}</div>`;}).join('')}</div>`;
+}
+function m3(id){const c=mt.cards.find(x=>x.id===id);if(!c||mt.sel.length===2||mt.matched.includes(c.word)||mt.sel.find(x=>x.id===c.id))return;mt.sel.push(c);r3();if(mt.sel.length===2){const[a,b]=mt.sel;if(a.word===b.word&&a.type!==b.type){speak(c.word);mt.matched.push(c.word);mt.s++;setTimeout(()=>{mt.sel=[];r3();},400);if(mt.matched.length===mt.max)setTimeout(()=>finish(mt.s),800);}else setTimeout(()=>{mt.sel=[];r3();},800);}}
+
+// ===== 4. WORD BUILDER =====
+let bl;
+function g4(){bl={i:0,s:0,l:[],a:[],w:gameWords.filter(w=>w.length>=3&&w.length<=7)};
+  G.innerHTML=`<div style="max-width:340px;margin:20px auto;text-align:center"><div style="font-size:60px;margin-bottom:16px">🔤</div><h2 style="font-size:24px;font-weight:700;color:#2d3436;margin-bottom:16px">Word Builder</h2><p style="font-size:18px;color:#636e72;line-height:1.6;margin-bottom:24px">The letters are all mixed up!<br>Tap them in the right order<br>to spell the word.<br><br>Tap 🔊 to hear the word!</p><button class="btn" style="background:#6c5ce7;font-size:20px;padding:14px 32px" onclick="s4()">Let's Go! 🔤</button></div>`;}
+function s4(){const w=bl.w[bl.i];bl.l=shuffle(w.split('').map((c,i)=>({c,id:c+'-'+i})));bl.a=[];r4();speak('Unscramble: '+w);}
+function r4(){
+  const w=bl.w[bl.i];
+  G.innerHTML=`<p style="font-size:16px;color:#7f8c8d;margin-bottom:8px">Word ${bl.i+1} of ${bl.w.length}</p>${progress(bl.s,bl.w.length)}<div style="font-size:48px;cursor:pointer;margin:12px 0" onclick="speak('${esc(w)}')">🔊</div><p style="font-size:16px;color:#636e72">Tap letters in order!</p><div style="display:flex;gap:8px;justify-content:center;margin:20px 0;min-height:60px;flex-wrap:wrap">${bl.a.map(l=>`<div onclick="b4r('${l.id}')" style="width:48px;height:56px;border-radius:12px;background:linear-gradient(135deg,#a8edea,#fed6e3);display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:600;cursor:pointer">${l.c}</div>`).join('')}${Array.from({length:w.length-bl.a.length}).map(()=>'<div style="width:48px;height:56px;border-radius:12px;border:3px dashed #dfe6e9"></div>').join('')}</div><div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">${bl.l.map(l=>`<div onclick="b4a('${l.id}')" style="width:52px;height:58px;border-radius:14px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:600;cursor:pointer">${l.c}</div>`).join('')}</div><p id="b4F" style="font-size:24px;margin-top:20px"></p>`;
+}
+function b4a(id){const l=bl.l.find(x=>x.id===id);if(!l)return;bl.a.push(l);bl.l=bl.l.filter(x=>x.id!==id);r4();const w=bl.w[bl.i];if(bl.a.length===w.length){if(bl.a.map(x=>x.c).join('')===w){bl.s++;document.getElementById('b4F').innerHTML='<span style="color:#2ecc71">🎉 Perfect!</span>';speak("Awesome!");setTimeout(()=>{if(bl.i+1>=bl.w.length)finish(bl.s);else{bl.i++;s4();}},1200);}else{document.getElementById('b4F').innerHTML='<span style="color:#e74c3c">Oops! Try again! 💪</span>';setTimeout(s4,1000);}}}
+function b4r(id){const l=bl.a.find(x=>x.id===id);if(!l)return;bl.l.push(l);bl.a=bl.a.filter(x=>x.id!==id);r4();}
+
+// ===== 5. WORD BINGO =====
+let bg;
+function g5(){const pool=shuffle(gameWords).slice(0,16);bg={words:shuffle([...pool]),grid:shuffle([...pool]),found:[],cur:null};showScreen('gameScreen');b5n();}
+function b5n(){if(bg.words.length===0||bg.found.length===bg.grid.length){finish(bg.found.length);return;}bg.cur=bg.words.pop();speak(bg.cur);r5();}
+function r5(){
+  G.innerHTML=`<p style="font-size:16px;color:#7f8c8d;margin-bottom:8px">Find the word you hear!</p>${progress(bg.found.length,bg.grid.length)}<button class="btn" style="background:#45B7D1;margin:12px 0" onclick="speak('${esc(bg.cur||'')}')">🔊 Hear Again</button><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:360px;margin:16px auto">${bg.grid.map((w,i)=>{const f=bg.found.includes(w);return`<div onclick="b5t(${i})" style="display:flex;align-items:center;justify-content:center;min-height:52px;padding:4px;font-size:16px;font-weight:600;border-radius:12px;cursor:pointer;background:${f?'#d5f5e3':'#fff'};border:2px solid ${f?'#2ecc71':'#dfe6e9'};color:${f?'#2ecc71':'#2d3436'};opacity:${f?.7:1};transition:all .2s">${w}${f?' ✓':''}</div>`;}).join('')}</div><p id="b5F" style="font-size:20px;margin-top:12px"></p>`;
+}
+function b5t(i){const w=bg.grid[i];if(bg.found.includes(w))return;if(w===bg.cur){bg.found.push(w);document.getElementById('b5F').innerHTML='<span style="color:#2ecc71">🎉 Found it!</span>';speak("Great job!");setTimeout(b5n,1200);}else{document.getElementById('b5F').innerHTML='<span style="color:#e74c3c">Try another! 👀</span>';setTimeout(()=>{const e=document.getElementById('b5F');if(e)e.textContent='';},800);}}
+
+// ===== 6. SENTENCE BUILDER =====
+let sn;
+function g6(){
+  const pool=shuffle(getWords()).slice(0,20);
+  const extras=["the","a","is","to","and","not","we","they","it","on","in","at","this","that","can"];
+  sn={s:0,rounds:0,maxRounds:5,pool,extras,placed:[],avail:[]};s6();}
+function s6(){
+  sn.placed=[];
+  const roundWords=shuffle([...sn.pool]).slice(0,6);
+  const bonusWords=shuffle([...sn.extras]).slice(0,4);
+  sn.avail=shuffle([...roundWords,...bonusWords]).map((w,i)=>({w,id:'w'+sn.rounds+'-'+i}));d6();}
+function d6(){
+  G.innerHTML=`<p style="font-size:16px;color:#7f8c8d;margin-bottom:8px">Sentence ${sn.rounds+1} of ${sn.maxRounds}</p>${progress(sn.s,sn.maxRounds)}<p style="font-size:18px;color:#636e72;margin:16px 0">Build a sentence! Tap words in order.</p><div style="min-height:56px;padding:12px;border-radius:16px;border:3px dashed #dfe6e9;margin:16px auto;max-width:380px;display:flex;flex-wrap:wrap;gap:6px;justify-content:center">${sn.placed.length?sn.placed.map((w,i)=>`<span onclick="s6r(${i})" style="display:inline-block;padding:8px 14px;margin:2px;border-radius:12px;font-size:20px;font-weight:600;cursor:pointer;background:#a8edea;color:#2d3436">${w.w}</span>`).join(''):'<span style="color:#b2bec3;font-size:16px;padding:8px">Tap words below...</span>'}</div><div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:16px 0">${sn.avail.map(w=>`<span onclick="s6a('${w.id}')" style="display:inline-block;padding:8px 14px;margin:2px;border-radius:12px;font-size:20px;font-weight:600;cursor:pointer;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff">${w.w}</span>`).join('')}</div><div style="display:flex;gap:12px;justify-content:center;margin-top:12px">${sn.placed.length>=2?`<button class="btn" style="background:#45B7D1;font-size:18px" onclick="s6h()">🔊 Hear My Sentence</button><button class="btn" style="background:#2ecc71;font-size:18px" onclick="s6d()">✅ Done!</button>`:''}<button class="btn" style="background:#f39c12" onclick="s6()">🔄 New Words</button></div><p id="s6F" style="font-size:20px;margin-top:12px"></p>`;
+}
+function s6a(id){const w=sn.avail.find(x=>x.id===id);if(!w)return;sn.placed.push(w);sn.avail=sn.avail.filter(x=>x.id!==id);d6();}
+function s6r(i){sn.avail.push(sn.placed[i]);sn.placed.splice(i,1);d6();}
+function s6h(){if(sn.placed.length>0)speak(sn.placed.map(w=>w.w).join(' '));}
+function s6d(){if(sn.placed.length<2)return;sn.s++;speak(sn.placed.map(w=>w.w).join(' '));document.getElementById('s6F').innerHTML='<span style="color:#2ecc71">🎉 Great sentence!</span>';setTimeout(()=>{sn.rounds++;if(sn.rounds>=sn.maxRounds)finish(sn.s);else s6();},2000);}
+
+// ===== 7. MISSING LETTER =====
+let ms;
+function g7(){ms={i:0,s:0,w:shuffle(gameWords.filter(w=>w.length>=3)).slice(0,15),ans:''};r7();}
+function r7(){
+  const w=ms.w[ms.i],pos=1+Math.floor(Math.random()*(w.length-1));ms.ans=w[pos];ms.pos=pos;
+  const display=w.split('').map((c,i)=>i===pos?'_':c).join('');
+  const wrong='abcdefghijklmnopqrstuvwxyz'.split('').filter(c=>c!==ms.ans);
+  const choices=shuffle([ms.ans,...shuffle(wrong).slice(0,3)]);
+  G.innerHTML=`<p style="font-size:16px;color:#7f8c8d;margin-bottom:8px">Word ${ms.i+1} of ${ms.w.length}</p>${progress(ms.s,ms.w.length)}<div style="font-size:48px;cursor:pointer;margin:16px 0" onclick="speak('${esc(w)}')">🔊</div><p style="font-size:18px;color:#636e72;margin-bottom:20px">Which letter is missing?</p><div id="m7W" style="font-size:48px;font-weight:700;color:#2d3436;letter-spacing:8px;margin-bottom:24px">${display}</div><div id="m7C" style="display:flex;gap:12px;justify-content:center">${choices.map(c=>`<button onclick="m7('${c}')" style="width:60px;height:60px;border-radius:16px;border:3px solid #dfe6e9;background:#fff;font-size:28px;font-weight:700;color:#2d3436;cursor:pointer;font-family:'Fredoka',sans-serif">${c}</button>`).join('')}</div><p id="m7F" style="font-size:20px;margin-top:16px"></p>`;
+}
+function m7(c){if(c===ms.ans){ms.s++;const w=ms.w[ms.i];const el=document.getElementById('m7W');el.innerHTML=w.split('').map((ch,i)=>i===ms.pos?'<span style="color:#2ecc71;text-decoration:underline">'+ch+'</span>':ch).join('');document.getElementById('m7C').innerHTML='';document.getElementById('m7F').innerHTML='<span style="color:#2ecc71">🎉 Correct!</span>';speak(w);setTimeout(()=>{if(ms.i+1>=ms.w.length)finish(ms.s);else{ms.i++;r7();}},1500);}else{document.getElementById('m7F').innerHTML='<span style="color:#e74c3c">Try another! 💪</span>';setTimeout(()=>{const e=document.getElementById('m7F');if(e)e.textContent='';},800);}}
+
+// ===== 8. SPEED READ =====
+let sd;
+function g8(){
+  const words=shuffle([...gameWords]).slice(0,15);
+  sd={i:0,s:0,words,active:true};s8();}
+function s8(){
+  if(sd.i>=sd.words.length){finish(sd.s);return;}
+  sd.active=true;
+  const dur=Math.max(1.0, 2.5-sd.i*0.1);
+  const w=sd.words[sd.i];
+  G.innerHTML=`<p style="font-size:16px;color:#7f8c8d;margin-bottom:8px">Word ${sd.i+1} of ${sd.words.length}</p>${progress(sd.s,sd.words.length)}<p style="font-size:14px;color:#b2bec3;margin:8px 0">👀 Read it before it disappears!</p><div style="width:250px;height:12px;border-radius:8px;background:#e0e0e0;margin:12px auto;overflow:hidden"><div id="sdB" style="width:100%;height:100%;border-radius:8px;background:linear-gradient(90deg,#e74c3c,#f39c12,#2ecc71);transition:width .05s linear"></div></div><div style="margin:30px 0"><span style="font-size:52px;font-weight:700;color:#2d3436;animation:bounceIn .3s ease">${w}</span></div>`;
+  const start=Date.now();if(activeTimer)clearInterval(activeTimer);
+  activeTimer=setInterval(()=>{const rem=dur-(Date.now()-start)/1000;if(rem<=0){clearInterval(activeTimer);s8pick();}else{const b=document.getElementById('sdB');if(b)b.style.width=`${(rem/dur)*100}%`;}},50);
+}
+function s8pick(){
+  const w=sd.words[sd.i];
+  const wrong=shuffle(gameWords.filter(x=>x!==w)).slice(0,3);
+  const choices=shuffle([w,...wrong]);
+  G.innerHTML=`<p style="font-size:16px;color:#7f8c8d;margin-bottom:8px">Word ${sd.i+1} of ${sd.words.length}</p>${progress(sd.s,sd.words.length)}<p style="font-size:20px;color:#636e72;margin:20px 0">Which word did you see? 👀</p><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:320px;margin:20px auto">${choices.map(c=>`<button onclick="s8ans(this,'${c.replace(/'/g,"\\'")}')" style="padding:16px;border-radius:16px;border:3px solid #dfe6e9;background:#fff;font-size:22px;font-weight:600;color:#2d3436;cursor:pointer;font-family:'Fredoka',sans-serif;transition:all .2s">${c}</button>`).join('')}</div><p id="sdF" style="font-size:22px;margin-top:16px"></p>`;
+}
+function s8ans(btn,picked){
+  if(!sd.active)return;sd.active=false;
+  const w=sd.words[sd.i];
+  if(picked===w){sd.s++;btn.style.background='#d5f5e3';btn.style.border='3px solid #2ecc71';document.getElementById('sdF').innerHTML='<span style="color:#2ecc71">⭐ You read it!</span>';speak(w);setTimeout(()=>{sd.i++;s8();},900);}
+  else{btn.style.background='#fadbd8';btn.style.border='3px solid #e74c3c';document.getElementById('sdF').innerHTML='<span style="color:#e74c3c">It was \"'+w+'\"</span>';speak(w);setTimeout(()=>{sd.i++;s8();},1500);}
 }
 
-function progressHTML(count, max) {
-  const pct = max>0 ? (count/max)*100 : 0;
-  return `<div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
-    <span style="font-size:16px;font-weight:600;color:#2d3436;">⭐ ${count}/${max}</span>`;
+// ===== 9. READ TO ME =====
+let rd;
+function g9(){
+  const av=getWords().map(w=>w.toLowerCase());
+  const valid=SENTENCES.filter(s=>s.every(w=>av.includes(w.toLowerCase())||['the','a','an','to','is','not','and','they','we'].includes(w.toLowerCase())));
+  rd={i:0,sen:shuffle(valid.length>0?valid:SENTENCES).slice(0,8)};r9();}
+function r9(){
+  const s=rd.sen[rd.i];
+  G.innerHTML=`<p style="font-size:16px;color:#7f8c8d;margin-bottom:8px">Sentence ${rd.i+1} of ${rd.sen.length}</p><p style="font-size:18px;color:#636e72;margin:16px 0">Try to read this out loud! 🗣️</p><div style="background:#fff;border-radius:20px;padding:24px;margin:20px auto;max-width:380px;box-shadow:0 8px 30px rgba(0,0,0,.08)"><p style="font-size:32px;font-weight:600;color:#2d3436;line-height:1.4">${s.join(' ')}</p></div><div style="display:flex;gap:12px;justify-content:center;margin-top:20px"><button class="btn" style="background:#45B7D1;font-size:18px" onclick="speak('${esc(s.join(' '))}')">🔊 Hear it</button>${rd.i+1<rd.sen.length?`<button class="btn" style="background:#2ecc71;font-size:18px" onclick="rd.i++;r9()">Next ➡️</button>`:`<button class="btn" style="background:#2ecc71;font-size:18px" onclick="finish(rd.sen.length)">🏆 Done!</button>`}</div><div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:20px">${s.map(w=>`<span onclick="speak('${esc(w)}')" style="font-size:16px;padding:6px 12px;border-radius:10px;background:#f0f0f0;color:#636e72;cursor:pointer">🔊 ${w}</span>`).join('')}</div>`;
 }
 
-function showConfetti() {
-  const el = document.getElementById('confetti');
-  el.classList.remove('hidden');
-  el.innerHTML = Array.from({length:20}).map((_,i) =>
-    `<div style="position:absolute;left:${Math.random()*100}%;top:-5%;font-size:${20+Math.random()*30}px;animation:confettiFall ${1.5+Math.random()*2}s ease-in forwards;animation-delay:${Math.random()*0.5}s">${CELEBRATIONS[Math.floor(Math.random()*CELEBRATIONS.length)]}</div>`
-  ).join('');
-  setTimeout(()=>{ el.classList.add('hidden'); el.innerHTML=''; }, 4000);
+// ===== 10. WORD SORT =====
+let ct;
+function g10(){
+  const av=getWords().map(w=>w.toLowerCase());
+  const entries=Object.entries(CATEGORIES);let cats={},pool=[];
+  for(const[n,ws]of entries){const m=ws.filter(w=>av.includes(w));if(m.length>=2){cats[n]=[];pool.push(...m.slice(0,4).map(w=>({w,cat:n})));}if(Object.keys(cats).length>=3)break;}
+  if(Object.keys(cats).length<2){cats={"Action Words":[],"Describing Words":[]};pool=[{w:"jump",cat:"Action Words"},{w:"walk",cat:"Action Words"},{w:"play",cat:"Action Words"},{w:"good",cat:"Describing Words"},{w:"little",cat:"Describing Words"},{w:"pretty",cat:"Describing Words"}];}
+  ct={s:0,cats,pool:shuffle(pool),placed:{},drag:null};Object.keys(ct.cats).forEach(c=>ct.placed[c]=[]);r10();}
+function r10(){
+  const cats=Object.keys(ct.cats),rem=ct.pool.filter(w=>!cats.some(c=>ct.placed[c].find(p=>p.w===w.w)));
+  G.innerHTML=`<p style="font-size:18px;color:#636e72;margin:12px 0">Tap a word, then tap its group!</p>${progress(ct.s,ct.pool.length)}<div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:16px 0">${rem.map(w=>`<span onclick="c10s('${esc(w.w)}')" style="font-size:18px;padding:8px 14px;border-radius:12px;background:${ct.drag===w.w?'#ffeaa7':'linear-gradient(135deg,#667eea,#764ba2)'};color:${ct.drag===w.w?'#2d3436':'#fff'};font-weight:600;cursor:pointer">${w.w}</span>`).join('')}</div>${cats.map(c=>`<div onclick="c10d('${esc(c)}')" style="min-height:70px;border-radius:16px;padding:10px;margin:8px auto;max-width:380px;display:flex;flex-wrap:wrap;gap:6px;align-content:flex-start;background:${ct.drag?'#fff3cd':'#f8f9fa'};border:2px ${ct.drag?'dashed #f39c12':'solid #dfe6e9'};cursor:pointer"><p style="font-size:14px;font-weight:600;color:#636e72;width:100%;margin-bottom:4px">📦 ${c}</p>${ct.placed[c].map(w=>`<span style="font-size:16px;padding:4px 10px;border-radius:8px;background:#d5f5e3;color:#2d3436">${w.w} ✓</span>`).join('')}</div>`).join('')}<p id="c10F" style="font-size:20px;margin-top:12px"></p>`;
+}
+function c10s(w){ct.drag=ct.drag===w?null:w;r10();}
+function c10d(cat){
+  if(!ct.drag)return;const wp=ct.pool.find(w=>w.w===ct.drag);if(!wp)return;
+  if(wp.cat===cat){ct.placed[cat].push(wp);ct.s++;ct.drag=null;speak("Great!");
+    const cats=Object.keys(ct.cats),rem=ct.pool.filter(w=>!cats.some(c=>ct.placed[c].find(p=>p.w===w.w)));
+    if(rem.length===0){r10();setTimeout(()=>finish(ct.s),1000);}else r10();
+  }else{ct.drag=null;r10();const e=document.getElementById('c10F');if(e)e.innerHTML='<span style="color:#e74c3c">Try another group! 🤔</span>';setTimeout(()=>{const e=document.getElementById('c10F');if(e)e.textContent='';},800);}
 }
 
-function showScreen(id) {
-  ['homeScreen','flashcardScreen','spellingScreen','matchScreen','builderScreen','resultsScreen'].forEach(s => {
-    document.getElementById(s).classList.add('hidden');
-  });
-  document.getElementById(id).classList.remove('hidden');
-  document.getElementById('homeBtn').classList.toggle('hidden', id==='homeScreen');
-}
-
-function getSelectedWords() {
-  let w=[];
-  selectedWeeks.forEach(wk => w.push(...WORDS_BY_WEEK[wk]));
-  return w;
-}
-
-// ===== VOICE =====
-function loadVoices() {
-  const voices = speechSynthesis.getVoices().filter(v=>v.lang.startsWith('en'));
-  const sel = document.getElementById('voiceSelect');
-  sel.innerHTML = '<option value="">Default</option>' + voices.map(v =>
-    `<option value="${v.name}">${v.name.replace(/Microsoft |Google |Apple /g,'')}</option>`
-  ).join('');
-  const preferred = voices.find(x=>/samantha|karen|daniel|moira|rishi|google.*female/i.test(x.name));
-  if(preferred && !selectedVoice) { selectedVoice=preferred; sel.value=preferred.name; }
-}
-function changeVoice() {
-  const sel = document.getElementById('voiceSelect');
-  const voices = speechSynthesis.getVoices().filter(v=>v.lang.startsWith('en'));
-  selectedVoice = voices.find(v=>v.name===sel.value) || null;
-  speak("Hello!");
-}
-if('speechSynthesis' in window) { loadVoices(); speechSynthesis.onvoiceschanged=loadVoices; }
-
-// ===== HOME =====
-function goHome() { showScreen('homeScreen'); renderHome(); }
-
-function renderHome() {
-  // Week buttons
-  const wb = document.getElementById('weekButtons');
-  wb.innerHTML = '';
-  for(let w=1;w<=20;w++) {
-    const btn = document.createElement('button');
-    btn.className = 'week-btn';
-    btn.textContent = w;
-    const active = selectedWeeks.includes(w);
-    btn.style.border = active ? 'none' : '2px solid #dfe6e9';
-    btn.style.background = active ? `linear-gradient(135deg, ${STAR_COLORS[w%8]}, ${STAR_COLORS[(w+3)%8]})` : 'white';
-    btn.style.color = active ? 'white' : '#636e72';
-    btn.style.boxShadow = active ? '0 4px 12px rgba(0,0,0,0.15)' : 'none';
-    btn.onclick = () => toggleWeek(w);
-    wb.appendChild(btn);
-  }
-  // Info
-  const total = selectedWeeks.reduce((a,w)=>a+WORDS_BY_WEEK[w].length,0);
-  document.getElementById('weekInfo').textContent = `${selectedWeeks.length} week${selectedWeeks.length>1?'s':''} selected • ${total} words`;
-  // Word preview
-  const wp = document.getElementById('wordPreview');
-  const words = getSelectedWords();
-  wp.innerHTML = words.map(w =>
-    `<span onclick="speak('${w.replace(/'/g,"\\'")}')" style="font-size:14px;padding:4px 10px;border-radius:8px;background:#f0f0f0;color:#2d3436;cursor:pointer;">${w}</span>`
-  ).join('');
-}
-
-function toggleWeek(w) {
-  if(selectedWeeks.includes(w)) {
-    if(selectedWeeks.length>1) selectedWeeks=selectedWeeks.filter(x=>x!==w);
-  } else {
-    selectedWeeks.push(w);
-  }
-  renderHome();
-}
-function selectAllWeeks() { selectedWeeks=Array.from({length:20},(_,i)=>i+1); renderHome(); }
-function clearWeeks() { selectedWeeks=[20]; renderHome(); }
-
-// ===== START GAME =====
-function startGame(mode) {
-  gameWords = shuffle(getSelectedWords());
-  currentGame = mode;
-  if(mode==='flashcards') startFlashcards();
-  else if(mode==='spelling') startSpelling();
-  else if(mode==='match') startMatch();
-  else if(mode==='builder') startBuilder();
-}
-
-function finishGame(score) {
-  showConfetti();
-  setTimeout(()=>{
-    document.getElementById('resultText').innerHTML = `You got <strong style="color:#2ecc71">${score}</strong> stars! ⭐`;
-    showScreen('resultsScreen');
-  }, 2000);
-}
-
-function replayGame() { startGame(currentGame); }
-
-// ===== FLASHCARDS =====
-function startFlashcards() {
-  fc = { idx:0, score:0, flipped:false };
-  showScreen('flashcardScreen');
-  renderFlashcard();
-}
-
-function renderFlashcard() {
-  const w = gameWords[fc.idx];
-  document.getElementById('fcProgress').textContent = `Card ${fc.idx+1} of ${gameWords.length}`;
-  document.getElementById('fcBar').innerHTML = progressHTML(fc.score, gameWords.length);
-  const card = document.getElementById('fcCard');
-  if(fc.flipped) {
-    card.style.background = 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)';
-    card.innerHTML = `<span style="font-size:56px;font-weight:600;color:#2d3436;">${w}</span>`;
-    document.getElementById('fcButtons').classList.remove('hidden');
-    document.getElementById('fcButtons').style.display = 'flex';
-    document.getElementById('fcButtons').innerHTML = `
-      <button class="btn" style="background:#45B7D1;" onclick="speak('${w.replace(/'/g,"\\'")}')">🔊 Hear it</button>
-      <button class="btn" style="background:#2ecc71;" onclick="fcKnew()">✅ I know it!</button>
-      <button class="btn" style="background:#e74c3c;" onclick="fcAdvance()">🔄 Practice more</button>`;
-  } else {
-    card.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
-    card.innerHTML = `<div style="color:white;text-align:center;"><span style="font-size:48px">🃏</span><p style="font-size:18px;margin-top:8px;">Tap to reveal!</p></div>`;
-    document.getElementById('fcButtons').classList.add('hidden');
-  }
-}
-
-function flipCard() {
-  if(window.speechSynthesis) speechSynthesis.cancel();
-  fc.flipped = true;
-  renderFlashcard();
-}
-
-function fcKnew() { fc.score++; fcAdvance(); }
-
-function fcAdvance() {
-  fc.flipped = false;
-  if(fc.idx+1 >= gameWords.length) {
-    finishGame(fc.score);
-  } else {
-    fc.idx++;
-    setTimeout(renderFlashcard, 200);
-  }
-}
-
-// ===== SPELLING =====
-function startSpelling() {
-  sp = { idx:0, score:0 };
-  showScreen('spellingScreen');
-  renderSpelling();
-  setTimeout(()=>speakCurrentWord(), 300);
-}
-
-function renderSpelling() {
-  document.getElementById('spProgress').textContent = `Word ${sp.idx+1} of ${gameWords.length}`;
-  document.getElementById('spBar').innerHTML = progressHTML(sp.score, gameWords.length);
-  document.getElementById('spInput').value = '';
-  document.getElementById('spInput').style.border = '3px solid #dfe6e9';
-  document.getElementById('spInput').style.background = 'white';
-  document.getElementById('spHint').classList.add('hidden');
-  document.getElementById('spFeedback').textContent = '';
-}
-
-function speakCurrentWord() { speak(gameWords[sp.idx]); }
-
-function showSpellingHint() {
-  const w = gameWords[sp.idx];
-  const hint = w[0] + w.slice(1).split('').map(()=>' _').join('');
-  document.getElementById('spHint').textContent = hint;
-  document.getElementById('spHint').classList.remove('hidden');
-}
-
-function checkSpelling() {
-  const input = document.getElementById('spInput');
-  const w = gameWords[sp.idx];
-  if(input.value.trim().toLowerCase() === w.toLowerCase()) {
-    sp.score++;
-    input.style.border = '3px solid #2ecc71';
-    input.style.background = '#d5f5e3';
-    document.getElementById('spFeedback').innerHTML = '<span style="color:#2ecc71;">🎉 Correct!</span>';
-    speak("Great job!");
-    setTimeout(()=>{
-      if(sp.idx+1 >= gameWords.length) {
-        finishGame(sp.score);
-      } else {
-        sp.idx++;
-        renderSpelling();
-        setTimeout(speakCurrentWord, 300);
-      }
-    }, 1200);
-  } else {
-    input.style.border = '3px solid #e74c3c';
-    input.style.background = '#fadbd8';
-    document.getElementById('spFeedback').innerHTML = '<span style="color:#e74c3c;">Not quite — try again! 💪</span>';
-    speak("Try again!");
-    setTimeout(()=>{
-      input.style.border = '3px solid #dfe6e9';
-      input.style.background = 'white';
-      document.getElementById('spFeedback').textContent = '';
-    }, 1000);
-  }
-}
-
-// Enter key for spelling
-document.addEventListener('keydown', e => {
-  if(e.key==='Enter' && !document.getElementById('spellingScreen').classList.contains('hidden')) checkSpelling();
-});
-
-// ===== MEMORY MATCH =====
-function startMatch() {
-  const gw = gameWords.slice(0, Math.min(gameWords.length, 6));
-  mt = { cards:[], selected:[], matched:[], score:0, maxWords:gw.length, gameWords:gw };
-  const pairs = gw.flatMap(w => [
-    { id:w+'-text', word:w, type:'text' },
-    { id:w+'-emoji', word:w, type:'emoji' }
-  ]);
-  mt.cards = shuffle(pairs);
-  showScreen('matchScreen');
-  renderMatch();
-}
-
-function renderMatch() {
-  document.getElementById('matchBar').innerHTML = progressHTML(mt.score, mt.maxWords);
-  const grid = document.getElementById('matchGrid');
-  grid.innerHTML = mt.cards.map(card => {
-    const isSel = mt.selected.find(s=>s.id===card.id);
-    const isMatch = mt.matched.includes(card.word);
-    const ci = mt.gameWords.indexOf(card.word);
-    let bg, color, fs, opacity, transform;
-    if(isMatch) { bg='#d5f5e3'; color='#2d3436'; fs=20; opacity=0.6; transform='scale(0.95)'; }
-    else if(isSel) { bg=CARD_COLORS[ci%6]; color='#2d3436'; fs=20; opacity=1; transform='scale(1.05)'; }
-    else { bg='linear-gradient(135deg,#667eea,#764ba2)'; color='white'; fs=28; opacity=1; transform='scale(1)'; }
-    let content;
-    if(isSel||isMatch) {
-      content = card.type==='emoji' ? `${ANIMALS[ci%15]} ${card.word}` : card.word;
-    } else { content='?'; }
-    return `<div onclick="matchSelect('${card.id}')" style="height:72px;border-radius:14px;display:flex;align-items:center;justify-content:center;cursor:${isMatch?'default':'pointer'};background:${bg};color:${color};font-family:'Fredoka',sans-serif;font-size:${fs}px;font-weight:600;box-shadow:0 4px 12px rgba(0,0,0,0.1);transform:${transform};transition:all 0.3s ease;opacity:${opacity};">${content}</div>`;
-  }).join('');
-}
-
-function matchSelect(cardId) {
-  const card = mt.cards.find(c=>c.id===cardId);
-  if(!card || mt.selected.length===2 || mt.matched.includes(card.word) || mt.selected.find(s=>s.id===card.id)) return;
-  mt.selected.push(card);
-  renderMatch();
-  if(mt.selected.length===2) {
-    const [a,b] = mt.selected;
-    if(a.word===b.word && a.type!==b.type) {
-      speak(card.word);
-      mt.matched.push(card.word);
-      mt.score++;
-      setTimeout(()=>{ mt.selected=[]; renderMatch(); }, 400);
-      if(mt.matched.length===mt.maxWords) {
-        setTimeout(()=>finishGame(mt.score), 800);
-      }
-    } else {
-      setTimeout(()=>{ mt.selected=[]; renderMatch(); }, 800);
-    }
-  }
-}
-
-// ===== WORD BUILDER =====
-function startBuilder() {
-  const gw = gameWords.filter(w=>w.length>=3&&w.length<=7);
-  bl = { idx:0, score:0, letters:[], answer:[], gameWords:gw };
-  showScreen('builderScreen');
-  setupBuilderWord();
-}
-
-function setupBuilderWord() {
-  const w = bl.gameWords[bl.idx];
-  bl.letters = shuffle(w.split('').map((c,i)=>({char:c, id:c+'-'+i})));
-  bl.answer = [];
-  renderBuilder();
-  speak('Unscramble: ' + w);
-}
-
-function speakBuilderWord() { speak(bl.gameWords[bl.idx]); }
-
-function renderBuilder() {
-  const w = bl.gameWords[bl.idx];
-  const total = bl.gameWords.length;
-  document.getElementById('blProgress').textContent = `Word ${bl.idx+1} of ${total}`;
-  document.getElementById('blBar').innerHTML = progressHTML(bl.score, total);
-  // Answer slots
-  const ansEl = document.getElementById('blAnswer');
-  ansEl.innerHTML = bl.answer.map(l =>
-    `<div onclick="blRemove('${l.id}')" style="width:48px;height:56px;border-radius:12px;background:linear-gradient(135deg,#a8edea,#fed6e3);display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:600;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,0.1);">${l.char}</div>`
-  ).join('') + Array.from({length:w.length-bl.answer.length}).map(()=>
-    `<div style="width:48px;height:56px;border-radius:12px;border:3px dashed #dfe6e9;"></div>`
-  ).join('');
-  // Available letters
-  document.getElementById('blLetters').innerHTML = bl.letters.map(l =>
-    `<div onclick="blAdd('${l.id}')" style="width:52px;height:58px;border-radius:14px;background:linear-gradient(135deg,#667eea,#764ba2);color:white;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:600;cursor:pointer;box-shadow:0 4px 16px rgba(102,126,234,0.4);">${l.char}</div>`
-  ).join('');
-  document.getElementById('blFeedback').textContent = '';
-}
-
-function blAdd(id) {
-  const l = bl.letters.find(x=>x.id===id);
-  if(!l) return;
-  bl.answer.push(l);
-  bl.letters = bl.letters.filter(x=>x.id!==id);
-  renderBuilder();
-  checkBuilder();
-}
-
-function blRemove(id) {
-  const l = bl.answer.find(x=>x.id===id);
-  if(!l) return;
-  bl.letters.push(l);
-  bl.answer = bl.answer.filter(x=>x.id!==id);
-  renderBuilder();
-}
-
-function checkBuilder() {
-  const w = bl.gameWords[bl.idx];
-  if(bl.answer.length !== w.length) return;
-  const built = bl.answer.map(a=>a.char).join('');
-  if(built === w) {
-    bl.score++;
-    document.getElementById('blFeedback').innerHTML = '<span style="color:#2ecc71;">🎉 Perfect!</span>';
-    speak("Awesome!");
-    setTimeout(()=>{
-      if(bl.idx+1 >= bl.gameWords.length) {
-        finishGame(bl.score);
-      } else {
-        bl.idx++;
-        setupBuilderWord();
-      }
-    }, 1200);
-  } else {
-    document.getElementById('blFeedback').innerHTML = '<span style="color:#e74c3c;">Oops! Let\'s try again! 💪</span>';
-    setTimeout(()=>{
-      bl.letters = shuffle(w.split('').map((c,i)=>({char:c,id:c+'-'+i})));
-      bl.answer = [];
-      renderBuilder();
-    }, 1000);
-  }
-}
-
-// ===== INIT =====
+// INIT
 renderHome();
 </script>
 </body>
