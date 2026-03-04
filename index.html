@@ -84,7 +84,6 @@ input{font-family:'Fredoka',sans-serif}
 <script>
 const W={1:["a","first","good","had","he","I","my","was"],2:["and","find","for","just","many","one","she","then"],3:["are","buy","little","said","too","up","will","you"],4:["do","live","of","our","wants","what","with","your"],5:["about","eat","how","make","out","put","takes","who"],6:["by","call","could","know","some","there","were","would"],7:["be","here","me","play","started","today","use","very"],8:["jump","right","say","their","walk","way","where","why"],9:["after","before","does","don't","grow","into","no","wash"],10:["around","came","come","found","other","people","two","worked"],11:["again","away","because","cold","fall","full","or","pretty"],12:["any","done","laugh","long","more","pull","teacher","think"],13:["another","gave","house","over","own","read","water","white"],14:["always","began","better","gives","hurt","shall","should","things"],15:["carry","draw","eight","even","goes","may","seven","shows"],16:["animal","heads","keep","let's","point","something","voice","won't"],17:["below","far","hear","hold","old","only","open","round"],18:["air","different","drink","enough","never","small","through","under"],19:["along","answer","children","going","mother","talk","upon","woman"],20:["bring","eyes","family","girl","move","soon","together","warm"]};
 
-const SENTENCES=[["I","had","a","good","first"],["she","said","you","are","little"],["he","will","find","one","too"],["what","do","you","want"],["who","could","call","by","there"],["come","here","and","play","today"],["they","walk","right","up"],["I","could","read","a","little"],["she","said","you","are","very","pretty"],["my","mother","and","I","walk","together"],["the","family","will","come","soon"],["you","should","always","be","good"],["I","think","we","should","go"],["she","gave","me","water"],["he","began","to","draw","eight"],["the","children","talk","and","laugh"],["we","bring","warm","eyes","along"],["the","girl","will","move","far","away"]];
 
 const CATEGORIES={"Action Words":["jump","walk","play","eat","make","call","draw","read","pull","carry","bring","move","grow","wash","drink","talk","laugh","find"],"Describing Words":["good","little","pretty","cold","full","long","old","small","different","warm","better","round","white","far"],"Question Words":["who","what","where","why","how"],
 "People Words":["mother","children","girl","family","woman","people","teacher","animal"]};
@@ -100,11 +99,12 @@ const GAMES=[
   {id:"match",emoji:"🧩",name:"Memory Match",desc:"Find the pairs",color:"#00b894"},
   {id:"builder",emoji:"🔤",name:"Word Builder",desc:"Unscramble letters",color:"#6c5ce7"},
   {id:"bingo",emoji:"🎯",name:"Word Bingo",desc:"Listen & find it",color:"#fd79a8"},
-  {id:"sentence",emoji:"📝",name:"Sentences",desc:"Build a sentence",color:"#e84393"},
   {id:"missing",emoji:"🔍",name:"Missing Letter",desc:"Fill the blank",color:"#0984e3"},
   {id:"speed",emoji:"⚡",name:"Speed Read",desc:"Read it fast!",color:"#f39c12"},
   {id:"read",emoji:"📖",name:"Read to Me",desc:"Practice reading",color:"#00cec9"},
-  {id:"category",emoji:"📦",name:"Word Sort",desc:"Sort into groups",color:"#a29bfe"}
+  {id:"category",emoji:"📦",name:"Word Sort",desc:"Sort into groups",color:"#a29bfe"},
+  {id:"race",emoji:"🏁",name:"Word Race",desc:"Pick 1 of 2, fast!",color:"#e84393"},
+  {id:"pop",emoji:"🫧",name:"Pop the Word",desc:"Tap the bubbles!",color:"#00b894"}
 ];
 
 let selectedWeeks=[20],gameWords=[],currentGame=null,selectedVoice=null,activeTimer=null;
@@ -117,7 +117,7 @@ function progress(c,m){const p=m>0?(c/m)*100:0;return`<div style="display:flex;a
 function confetti(){const e=document.getElementById('confetti');e.classList.remove('hidden');e.innerHTML=Array.from({length:20}).map(()=>`<div style="position:absolute;left:${Math.random()*100}%;top:-5%;font-size:${20+Math.random()*30}px;animation:confettiFall ${1.5+Math.random()*2}s ease-in forwards;animation-delay:${Math.random()*.5}s">${CELEBRATIONS[Math.floor(Math.random()*CELEBRATIONS.length)]}</div>`).join('');setTimeout(()=>{e.classList.add('hidden');e.innerHTML='';},4000);}
 function showScreen(id){['homeScreen','gameScreen','resultsScreen'].forEach(s=>document.getElementById(s).classList.add('hidden'));document.getElementById(id).classList.remove('hidden');document.getElementById('homeBtn').classList.toggle('hidden',id==='homeScreen');}
 function getWords(){let w=[];selectedWeeks.forEach(wk=>w.push(...W[wk]));return w;}
-function finish(score){if(activeTimer)clearInterval(activeTimer);confetti();setTimeout(()=>{document.getElementById('resultText').innerHTML=`You got <strong style="color:#2ecc71">${score}</strong> stars! ⭐`;showScreen('resultsScreen');},2000);}
+function finish(score){if(activeTimer)clearInterval(activeTimer);if(typeof pw!=='undefined'&&pw&&pw.raf)cancelAnimationFrame(pw.raf);speechSynthesis.cancel();confetti();setTimeout(()=>{document.getElementById('resultText').innerHTML=`You got <strong style="color:#2ecc71">${score}</strong> stars! ⭐`;showScreen('resultsScreen');},2000);}
 
 // Voice
 function loadVoices(){const v=speechSynthesis.getVoices().filter(v=>v.lang.startsWith('en'));const s=document.getElementById('voiceSelect');s.innerHTML='<option value="">Default</option>'+v.map(x=>`<option value="${x.name}">${x.name.replace(/Microsoft |Google |Apple /g,'')}</option>`).join('');const p=v.find(x=>/samantha|karen|daniel|moira|rishi|google.*female/i.test(x.name));if(p&&!selectedVoice){selectedVoice=p;s.value=p.name;}}
@@ -125,7 +125,7 @@ function changeVoice(){const v=speechSynthesis.getVoices().filter(v=>v.lang.star
 if('speechSynthesis'in window){loadVoices();speechSynthesis.onvoiceschanged=loadVoices;}
 
 // Home
-function goHome(){if(activeTimer)clearInterval(activeTimer);showScreen('homeScreen');renderHome();}
+function goHome(){if(activeTimer)clearInterval(activeTimer);if(typeof pw!=='undefined'&&pw&&pw.raf)cancelAnimationFrame(pw.raf);if('speechSynthesis'in window)speechSynthesis.cancel();showScreen('homeScreen');renderHome();}
 function renderHome(){
   const wb=document.getElementById('weekButtons');wb.innerHTML='';
   for(let w=1;w<=20;w++){const b=document.createElement('button');b.className='week-btn';b.textContent=w;const a=selectedWeeks.includes(w);b.style.border=a?'none':'2px solid #dfe6e9';b.style.background=a?`linear-gradient(135deg,${STAR_COLORS[w%8]},${STAR_COLORS[(w+3)%8]})`:'white';b.style.color=a?'white':'#636e72';b.style.boxShadow=a?'0 4px 12px rgba(0,0,0,.15)':'none';b.onclick=()=>toggleWeek(w);wb.appendChild(b);}
@@ -137,7 +137,7 @@ function toggleWeek(w){if(selectedWeeks.includes(w)){if(selectedWeeks.length>1)s
 function selectAllWeeks(){selectedWeeks=Array.from({length:20},(_,i)=>i+1);renderHome();}
 function clearWeeks(){selectedWeeks=[20];renderHome();}
 
-function startGame(mode){if(activeTimer)clearInterval(activeTimer);gameWords=shuffle(getWords());currentGame=mode;showScreen('gameScreen');({flashcards:g1,spelling:g2,match:g3,builder:g4,bingo:g5,sentence:g6,missing:g7,speed:g8,read:g9,category:g10})[mode]();}
+function startGame(mode){if(activeTimer)clearInterval(activeTimer);gameWords=shuffle(getWords());currentGame=mode;showScreen('gameScreen');({flashcards:g1,spelling:g2,match:g3,builder:g4,bingo:g5,missing:g7,speed:g8,read:g9,category:g10,race:g11,pop:g12})[mode]();}
 function replayGame(){startGame(currentGame);}
 
 // ===== 1. FLASHCARDS =====
@@ -193,25 +193,6 @@ function r5(){
   G.innerHTML=`<p style="font-size:16px;color:#7f8c8d;margin-bottom:8px">Find the word you hear!</p>${progress(bg.found.length,bg.grid.length)}<button class="btn" style="background:#45B7D1;margin:12px 0" onclick="speak('${esc(bg.cur||'')}')">🔊 Hear Again</button><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:360px;margin:16px auto">${bg.grid.map((w,i)=>{const f=bg.found.includes(w);return`<div onclick="b5t(${i})" style="display:flex;align-items:center;justify-content:center;min-height:52px;padding:4px;font-size:16px;font-weight:600;border-radius:12px;cursor:pointer;background:${f?'#d5f5e3':'#fff'};border:2px solid ${f?'#2ecc71':'#dfe6e9'};color:${f?'#2ecc71':'#2d3436'};opacity:${f?.7:1};transition:all .2s">${w}${f?' ✓':''}</div>`;}).join('')}</div><p id="b5F" style="font-size:20px;margin-top:12px"></p>`;
 }
 function b5t(i){const w=bg.grid[i];if(bg.found.includes(w))return;if(w===bg.cur){bg.found.push(w);document.getElementById('b5F').innerHTML='<span style="color:#2ecc71">🎉 Found it!</span>';speak("Great job!");setTimeout(b5n,1200);}else{document.getElementById('b5F').innerHTML='<span style="color:#e74c3c">Try another! 👀</span>';setTimeout(()=>{const e=document.getElementById('b5F');if(e)e.textContent='';},800);}}
-
-// ===== 6. SENTENCE BUILDER =====
-let sn;
-function g6(){
-  const pool=shuffle(getWords()).slice(0,20);
-  const extras=["the","a","is","to","and","not","we","they","it","on","in","at","this","that","can"];
-  sn={s:0,rounds:0,maxRounds:5,pool,extras,placed:[],avail:[]};s6();}
-function s6(){
-  sn.placed=[];
-  const roundWords=shuffle([...sn.pool]).slice(0,6);
-  const bonusWords=shuffle([...sn.extras]).slice(0,4);
-  sn.avail=shuffle([...roundWords,...bonusWords]).map((w,i)=>({w,id:'w'+sn.rounds+'-'+i}));d6();}
-function d6(){
-  G.innerHTML=`<p style="font-size:16px;color:#7f8c8d;margin-bottom:8px">Sentence ${sn.rounds+1} of ${sn.maxRounds}</p>${progress(sn.s,sn.maxRounds)}<p style="font-size:18px;color:#636e72;margin:16px 0">Build a sentence! Tap words in order.</p><div style="min-height:56px;padding:12px;border-radius:16px;border:3px dashed #dfe6e9;margin:16px auto;max-width:380px;display:flex;flex-wrap:wrap;gap:6px;justify-content:center">${sn.placed.length?sn.placed.map((w,i)=>`<span onclick="s6r(${i})" style="display:inline-block;padding:8px 14px;margin:2px;border-radius:12px;font-size:20px;font-weight:600;cursor:pointer;background:#a8edea;color:#2d3436">${w.w}</span>`).join(''):'<span style="color:#b2bec3;font-size:16px;padding:8px">Tap words below...</span>'}</div><div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:16px 0">${sn.avail.map(w=>`<span onclick="s6a('${w.id}')" style="display:inline-block;padding:8px 14px;margin:2px;border-radius:12px;font-size:20px;font-weight:600;cursor:pointer;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff">${w.w}</span>`).join('')}</div><div style="display:flex;gap:12px;justify-content:center;margin-top:12px">${sn.placed.length>=2?`<button class="btn" style="background:#45B7D1;font-size:18px" onclick="s6h()">🔊 Hear My Sentence</button><button class="btn" style="background:#2ecc71;font-size:18px" onclick="s6d()">✅ Done!</button>`:''}<button class="btn" style="background:#f39c12" onclick="s6()">🔄 New Words</button></div><p id="s6F" style="font-size:20px;margin-top:12px"></p>`;
-}
-function s6a(id){const w=sn.avail.find(x=>x.id===id);if(!w)return;sn.placed.push(w);sn.avail=sn.avail.filter(x=>x.id!==id);d6();}
-function s6r(i){sn.avail.push(sn.placed[i]);sn.placed.splice(i,1);d6();}
-function s6h(){if(sn.placed.length>0)speak(sn.placed.map(w=>w.w).join(' '));}
-function s6d(){if(sn.placed.length<2)return;sn.s++;speak(sn.placed.map(w=>w.w).join(' '));document.getElementById('s6F').innerHTML='<span style="color:#2ecc71">🎉 Great sentence!</span>';setTimeout(()=>{sn.rounds++;if(sn.rounds>=sn.maxRounds)finish(sn.s);else s6();},2000);}
 
 // ===== 7. MISSING LETTER =====
 let ms;
@@ -282,6 +263,109 @@ function c10d(cat){
     const cats=Object.keys(ct.cats),rem=ct.pool.filter(w=>!cats.some(c=>ct.placed[c].find(p=>p.w===w.w)));
     if(rem.length===0){r10();setTimeout(()=>finish(ct.s),1000);}else r10();
   }else{ct.drag=null;r10();const e=document.getElementById('c10F');if(e)e.innerHTML='<span style="color:#e74c3c">Try another group! 🤔</span>';setTimeout(()=>{const e=document.getElementById('c10F');if(e)e.textContent='';},800);}
+}
+
+// ===== 11. WORD RACE =====
+let wr;
+function g11(){
+  wr={i:0,s:0,w:shuffle([...gameWords]).slice(0,15),totalTime:0};
+  G.innerHTML=`<div style="max-width:340px;margin:20px auto;text-align:center"><div style="font-size:60px;margin-bottom:16px">🏁</div><h2 style="font-size:24px;font-weight:700;color:#2d3436;margin-bottom:16px">Word Race</h2><p style="font-size:18px;color:#636e72;line-height:1.6;margin-bottom:24px">You'll hear a word.<br>Two words will show up.<br>Tap the right one as fast as you can!</p><button class="btn" style="background:#e84393;font-size:20px;padding:14px 32px" onclick="r11()">Ready, Set, Go! 🏁</button></div>`;
+}
+function r11(){
+  if(wr.i>=wr.w.length){finish(wr.s);return;}
+  const target=wr.w[wr.i];
+  const decoy=shuffle(gameWords.filter(w=>w!==target))[0]||"the";
+  const pair=shuffle([target,decoy]);
+  wr.start=Date.now();
+  speak(target);
+  G.innerHTML=`<p style="font-size:16px;color:#7f8c8d;margin-bottom:8px">Word ${wr.i+1} of ${wr.w.length}</p>${progress(wr.s,wr.w.length)}<div style="font-size:48px;cursor:pointer;margin:16px 0" onclick="speak('${esc(target)}')">🔊</div><p style="font-size:18px;color:#636e72;margin:8px 0">Tap the word you heard!</p><div style="display:flex;gap:16px;justify-content:center;margin:24px 0">${pair.map(w=>`<button onclick="r11tap(this,'${esc(w)}','${esc(target)}')" style="padding:20px 32px;border-radius:20px;border:3px solid #dfe6e9;background:#fff;font-size:32px;font-weight:700;color:#2d3436;cursor:pointer;font-family:'Fredoka',sans-serif;min-width:130px;transition:all .2s">${w}</button>`).join('')}</div><p id="r11F" style="font-size:22px;margin-top:16px"></p>`;
+}
+function r11tap(btn,picked,target){
+  const ms=Date.now()-wr.start;
+  if(picked===target){
+    wr.s++;wr.totalTime+=ms;
+    btn.style.background='#d5f5e3';btn.style.border='3px solid #2ecc71';btn.style.transform='scale(1.1)';
+    const speed=ms<1000?'⚡ Lightning!':ms<2000?'🔥 Fast!':'👍 Got it!';
+    document.getElementById('r11F').innerHTML=`<span style="color:#2ecc71">${speed}</span>`;
+    setTimeout(()=>{wr.i++;r11();},800);
+  }else{
+    btn.style.background='#fadbd8';btn.style.border='3px solid #e74c3c';
+    document.getElementById('r11F').innerHTML='<span style="color:#e74c3c">That\'s the other one! 👀</span>';
+    speak(target);
+    setTimeout(()=>{wr.i++;r11();},1500);
+  }
+}
+
+// ===== 12. POP THE WORD =====
+let pw;
+function g12(){
+  pw={s:0,w:shuffle([...gameWords]).slice(0,15),i:0,bubbles:[],target:null,raf:null,done:false};
+  G.innerHTML='<div style="max-width:340px;margin:20px auto;text-align:center"><div style="font-size:60px;margin-bottom:16px">🫧</div><h2 style="font-size:24px;font-weight:700;color:#2d3436;margin-bottom:16px">Pop the Word</h2><p style="font-size:18px;color:#636e72;line-height:1.6;margin-bottom:24px">Words float up like bubbles!<br>Listen for the word.<br>Tap it before it floats away!</p><button class="btn" style="background:#00b894;font-size:20px;padding:14px 32px" onclick="p12go()">Let\'s Pop! 🫧</button></div>';
+}
+function p12go(){
+  if(pw.i>=pw.w.length){finish(pw.s);return;}
+  pw.target=pw.w[pw.i];pw.done=false;
+  const distractors=shuffle(gameWords.filter(w=>w!==pw.target)).slice(0,4);
+  const allWords=shuffle([pw.target,...distractors]);
+  const xSlots=shuffle([10,30,50,70,85]);
+  pw.bubbles=allWords.map((w,i)=>({w,id:'b'+pw.i+'-'+i,x:xSlots[i],y:105+i*30,speed:0.25+Math.random()*0.15,wobble:Math.random()*Math.PI*2,popped:false}));
+  speak(pw.target);
+  // Build shell once
+  G.innerHTML=`<p style="font-size:16px;color:#7f8c8d;margin-bottom:4px">Word ${pw.i+1} of ${pw.w.length}</p>${progress(pw.s,pw.w.length)}<button class="btn" style="background:#45B7D1;margin:8px 0" id="p12hear">🔊 Hear Again</button><div id="p12area" style="position:relative;width:100%;height:350px;overflow:hidden;border-radius:20px;background:linear-gradient(180deg,#e0f7ff,#f0e6ff);margin:8px 0"></div><p id="p12F" style="font-size:22px;margin-top:8px"></p>`;
+  document.getElementById('p12hear').addEventListener('click',()=>speak(pw.target));
+  // Create bubble elements
+  const area=document.getElementById('p12area');
+  pw.bubbles.forEach(b=>{
+    const el=document.createElement('div');
+    el.id=b.id;
+    el.textContent=b.w;
+    el.style.cssText='position:absolute;padding:12px 18px;border-radius:50px;background:rgba(255,255,255,0.92);border:3px solid #dfe6e9;font-size:20px;font-weight:600;color:#2d3436;cursor:pointer;box-shadow:0 4px 15px rgba(0,0,0,0.1);white-space:nowrap;user-select:none;-webkit-user-select:none;z-index:10;';
+    el.style.left=b.x+'%';el.style.top=b.y+'%';el.style.transform='translate(-50%,-50%)';
+    el.addEventListener('pointerdown',function(e){e.preventDefault();p12tap(b.id);});
+    area.appendChild(el);
+  });
+  if(pw.raf)cancelAnimationFrame(pw.raf);
+  p12animate();
+}
+function p12animate(){
+  if(pw.done)return;
+  const active=pw.bubbles.filter(b=>!b.popped);
+  let anyVisible=false;
+  for(const b of active){
+    b.y-=b.speed;b.wobble+=0.02;b.x+=Math.sin(b.wobble)*0.2;
+    if(b.y>-10)anyVisible=true;
+    const el=document.getElementById(b.id);
+    if(el){el.style.left=b.x+'%';el.style.top=b.y+'%';}
+  }
+  if(!anyVisible){
+    pw.done=true;cancelAnimationFrame(pw.raf);
+    const f=document.getElementById('p12F');
+    if(f)f.innerHTML='<span style="color:#e74c3c">⏰ Too slow! It was "'+pw.target+'"</span>';
+    speak(pw.target);
+    setTimeout(()=>{pw.i++;p12go();},1500);
+    return;
+  }
+  pw.raf=requestAnimationFrame(p12animate);
+}
+function p12tap(id){
+  if(pw.done)return;
+  const b=pw.bubbles.find(x=>x.id===id);
+  if(!b||b.popped)return;
+  const el=document.getElementById(b.id);
+  if(b.w===pw.target){
+    pw.done=true;b.popped=true;
+    cancelAnimationFrame(pw.raf);
+    if(el){el.style.background='#d5f5e3';el.style.border='3px solid #2ecc71';el.style.transform='translate(-50%,-50%) scale(1.3)';}
+    pw.s++;
+    const f=document.getElementById('p12F');if(f)f.innerHTML='<span style="color:#2ecc71">🎉 Pop!</span>';
+    speak(pw.target);
+    setTimeout(()=>{pw.i++;p12go();},900);
+  }else{
+    b.popped=true;
+    if(el){el.style.opacity='0';el.style.transform='translate(-50%,-50%) scale(0)';el.style.transition='all 0.3s';}
+    const f=document.getElementById('p12F');if(f)f.innerHTML='<span style="color:#e74c3c">Not that one!</span>';
+    setTimeout(()=>{const f=document.getElementById('p12F');if(f)f.textContent='';},600);
+  }
 }
 
 // INIT
