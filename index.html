@@ -39,13 +39,17 @@ input{font-family:'Fredoka',sans-serif}
   <button id="homeBtn" class="btn hidden" style="background:#fff;color:#636e72;font-size:18px;font-weight:600;padding:12px 20px;border-radius:16px;box-shadow:0 4px 14px rgba(0,0,0,.1);margin-bottom:8px" onclick="goHome()">← Home</button>
   <div class="float"><span style="font-size:44px">📚</span></div>
   <h1 class="gradient-title">Sight Word Stars</h1>
-  <p style="font-size:14px;color:#636e72">1st Grade Sight Words Practice ✨</p>
+  <p id="subtitle" style="font-size:14px;color:#636e72">Sight Words Practice ✨</p>
 </div>
 
 <div class="container">
   <div id="homeScreen">
-    <div class="card-box">
-      <h2 style="font-size:20px;font-weight:600;color:#2d3436;margin-bottom:12px">📅 Pick Your Weeks</h2>
+    <div class="card-box" style="padding:16px">
+      <div style="display:flex;gap:8px;justify-content:center;margin-bottom:14px">
+        <button id="gradeK" class="btn" style="font-size:15px;padding:10px 20px" onclick="switchGrade('K')">🧒 Kindergarten</button>
+        <button id="grade1" class="btn" style="font-size:15px;padding:10px 20px" onclick="switchGrade('1')">📚 1st Grade</button>
+      </div>
+      <h2 id="periodLabel" style="font-size:20px;font-weight:600;color:#2d3436;margin-bottom:12px">📅 Pick Your Weeks</h2>
       <div id="weekButtons" style="display:flex;flex-wrap:wrap;gap:8px"></div>
       <div style="display:flex;gap:10px;margin-top:12px">
         <button class="btn" style="background:#4ECDC4;font-size:14px;padding:8px 16px;border-radius:12px" onclick="selectAllWeeks()">✅ Select All</button>
@@ -82,7 +86,12 @@ input{font-family:'Fredoka',sans-serif}
 </div>
 
 <script>
-const W={1:["a","first","good","had","he","I","my","was"],2:["and","find","for","just","many","one","she","then"],3:["are","buy","little","said","too","up","will","you"],4:["do","live","of","our","wants","what","with","your"],5:["about","eat","how","make","out","put","takes","who"],6:["by","call","could","know","some","there","were","would"],7:["be","here","me","play","started","today","use","very"],8:["jump","right","say","their","walk","way","where","why"],9:["after","before","does","don't","grow","into","no","wash"],10:["around","came","come","found","other","people","two","worked"],11:["again","away","because","cold","fall","full","or","pretty"],12:["any","done","laugh","long","more","pull","teacher","think"],13:["another","gave","house","over","own","read","water","white"],14:["always","began","better","gives","hurt","shall","should","things"],15:["carry","draw","eight","even","goes","may","seven","shows"],16:["animal","heads","keep","let's","point","something","voice","won't"],17:["below","far","hear","hold","old","only","open","round"],18:["air","different","drink","enough","never","small","through","under"],19:["along","answer","children","going","mother","talk","upon","woman"],20:["bring","eyes","family","girl","move","soon","together","warm"]};
+const W1={1:["a","first","good","had","he","I","my","was"],2:["and","find","for","just","many","one","she","then"],3:["are","buy","little","said","too","up","will","you"],4:["do","live","of","our","wants","what","with","your"],5:["about","eat","how","make","out","put","takes","who"],6:["by","call","could","know","some","there","were","would"],7:["be","here","me","play","started","today","use","very"],8:["jump","right","say","their","walk","way","where","why"],9:["after","before","does","don't","grow","into","no","wash"],10:["around","came","come","found","other","people","two","worked"],11:["again","away","because","cold","fall","full","or","pretty"],12:["any","done","laugh","long","more","pull","teacher","think"],13:["another","gave","house","over","own","read","water","white"],14:["always","began","better","gives","hurt","shall","should","things"],15:["carry","draw","eight","even","goes","may","seven","shows"],16:["animal","heads","keep","let's","point","something","voice","won't"],17:["below","far","hear","hold","old","only","open","round"],18:["air","different","drink","enough","never","small","through","under"],19:["along","answer","children","going","mother","talk","upon","woman"],20:["bring","eyes","family","girl","move","soon","together","warm"]};
+
+const WK={1:["to","by","my","am","at","go","man","no","is","the","a","see","I"],2:["can","and","you","an","it","has","ran","he","she","did","in","put","sits","me","with","big","good","his","very","got","on","here","of"],3:["lot","not","are","was","had","be","do","ten","but","up","look","want","him","us","for","her","yes","help","too","they","six","have","some","we","get","hot","where","or","if","stop","come","from","red","as","that","our"],4:["cut","must","said","when","off","will","down","so","back","let","were","what","then","this","could","now","tell","well","your","who","home","like","many","right","keep","made","why","would","make","time","all","into","came","gave","about","one"]};
+
+let currentGrade='1';
+let W=W1;
 
 
 const CATEGORIES={"Action Words":["jump","walk","play","eat","make","call","draw","read","pull","carry","bring","move","grow","wash","drink","talk","laugh","find"],"Describing Words":["good","little","pretty","cold","full","long","old","small","different","warm","better","round","white","far"],"Question Words":["who","what","where","why","how"],
@@ -110,6 +119,14 @@ const GAMES=[
 let selectedWeeks=[20],gameWords=[],currentGame=null,selectedVoice=null,activeTimer=null;
 const G=document.getElementById('gameScreen');
 
+function switchGrade(g){
+  currentGrade=g;
+  W=g==='K'?WK:W1;
+  const maxKey=Math.max(...Object.keys(W).map(Number));
+  selectedWeeks=[maxKey];
+  renderHome();
+}
+
 function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 function speak(t,r=0.8){if('speechSynthesis'in window){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.rate=r;u.pitch=1;if(selectedVoice)u.voice=selectedVoice;speechSynthesis.speak(u);}}
 function esc(s){return s.replace(/'/g,"\\'");}
@@ -127,15 +144,24 @@ if('speechSynthesis'in window){loadVoices();speechSynthesis.onvoiceschanged=load
 // Home
 function goHome(){if(activeTimer)clearInterval(activeTimer);if(typeof pw!=='undefined'&&pw&&pw.raf)cancelAnimationFrame(pw.raf);if('speechSynthesis'in window)speechSynthesis.cancel();showScreen('homeScreen');renderHome();}
 function renderHome(){
+  // Grade buttons
+  document.getElementById('gradeK').style.background=currentGrade==='K'?'#00b894':'#b2bec3';
+  document.getElementById('grade1').style.background=currentGrade==='1'?'#667eea':'#b2bec3';
+  document.getElementById('subtitle').textContent=(currentGrade==='K'?'Kindergarten':'1st Grade')+' Sight Words Practice ✨';
+  const maxKey=Math.max(...Object.keys(W).map(Number));
+  const isK=currentGrade==='K';
+  const qLabels=['','Q1','Q2','Q3','Q4'];
+  document.getElementById('periodLabel').textContent=isK?'📅 Pick Your Quarters':'📅 Pick Your Weeks';
   const wb=document.getElementById('weekButtons');wb.innerHTML='';
-  for(let w=1;w<=20;w++){const b=document.createElement('button');b.className='week-btn';b.textContent=w;const a=selectedWeeks.includes(w);b.style.border=a?'none':'2px solid #dfe6e9';b.style.background=a?`linear-gradient(135deg,${STAR_COLORS[w%8]},${STAR_COLORS[(w+3)%8]})`:'white';b.style.color=a?'white':'#636e72';b.style.boxShadow=a?'0 4px 12px rgba(0,0,0,.15)':'none';b.onclick=()=>toggleWeek(w);wb.appendChild(b);}
-  document.getElementById('weekInfo').textContent=`${selectedWeeks.length} week${selectedWeeks.length>1?'s':''} • ${getWords().length} words`;
+  for(let w=1;w<=maxKey;w++){const b=document.createElement('button');b.className='week-btn';b.textContent=isK?qLabels[w]:w;b.style.width=isK?'64px':'44px';const a=selectedWeeks.includes(w);b.style.border=a?'none':'2px solid #dfe6e9';b.style.background=a?`linear-gradient(135deg,${STAR_COLORS[w%8]},${STAR_COLORS[(w+3)%8]})`:'white';b.style.color=a?'white':'#636e72';b.style.boxShadow=a?'0 4px 12px rgba(0,0,0,.15)':'none';b.onclick=()=>toggleWeek(w);wb.appendChild(b);}
+  const periodName=isK?'quarter':'week';
+  document.getElementById('weekInfo').textContent=`${selectedWeeks.length} ${periodName}${selectedWeeks.length>1?'s':''} • ${getWords().length} words`;
   document.getElementById('gameGrid').innerHTML=GAMES.map(g=>`<button class="game-btn" onclick="startGame('${g.id}')"><div style="font-size:32px;margin-bottom:4px" class="wiggle">${g.emoji}</div><div style="font-size:14px;font-weight:600;color:${g.color}">${g.name}</div><div style="font-size:11px;color:#b2bec3;margin-top:2px">${g.desc}</div></button>`).join('');
   document.getElementById('wordPreview').innerHTML=getWords().map(w=>`<span onclick="speak('${esc(w)}')" style="font-size:14px;padding:4px 10px;border-radius:8px;background:#f0f0f0;color:#2d3436;cursor:pointer">${w}</span>`).join('');
 }
 function toggleWeek(w){if(selectedWeeks.includes(w)){if(selectedWeeks.length>1)selectedWeeks=selectedWeeks.filter(x=>x!==w);}else selectedWeeks.push(w);renderHome();}
-function selectAllWeeks(){selectedWeeks=Array.from({length:20},(_,i)=>i+1);renderHome();}
-function clearWeeks(){selectedWeeks=[20];renderHome();}
+function selectAllWeeks(){const maxKey=Math.max(...Object.keys(W).map(Number));selectedWeeks=Array.from({length:maxKey},(_,i)=>i+1);renderHome();}
+function clearWeeks(){const maxKey=Math.max(...Object.keys(W).map(Number));selectedWeeks=[maxKey];renderHome();}
 
 function startGame(mode){if(activeTimer)clearInterval(activeTimer);gameWords=shuffle(getWords());currentGame=mode;showScreen('gameScreen');({flashcards:g1,spelling:g2,match:g3,builder:g4,bingo:g5,missing:g7,speed:g8,read:g9,category:g10,race:g11,pop:g12})[mode]();}
 function replayGame(){startGame(currentGame);}
