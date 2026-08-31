@@ -50,6 +50,10 @@ input{font-family:'Fredoka',sans-serif}
         <button id="grade1" class="btn" style="font-size:15px;padding:10px 20px" onclick="switchGrade('1')">📚 1st Grade</button>
         <button id="grade2" class="btn" style="font-size:15px;padding:10px 20px" onclick="switchGrade('2')">🎓 2nd Grade</button>
       </div>
+      <div id="modeToggle" class="hidden" style="display:flex;gap:8px;justify-content:center;margin-bottom:14px">
+        <button id="modeSight" class="btn" style="font-size:14px;padding:8px 16px" onclick="switchMode('sight')">⭐ Sight Words</button>
+        <button id="modeSpelling" class="btn" style="font-size:14px;padding:8px 16px" onclick="switchMode('spelling')">✏️ Spelling Words</button>
+      </div>
       <h2 id="periodLabel" style="font-size:20px;font-weight:600;color:#2d3436;margin-bottom:12px">📅 Pick Your Weeks</h2>
       <div id="weekButtons" style="display:flex;flex-wrap:wrap;gap:8px"></div>
       <div style="display:flex;gap:10px;margin-top:12px">
@@ -91,10 +95,15 @@ const W1={1:["a","first","good","had","he","I","my","was"],2:["and","find","for"
 
 const WK={1:["to","by","my","am","at","go","man","no","is","the","a","see","I"],2:["can","and","you","an","it","has","ran","he","she","did","in","put","sits","me","with","big","good","his","very","got","on","here","of"],3:["lot","not","are","was","had","be","do","ten","but","up","look","want","him","us","for","her","yes","help","too","they","six","have","some","we","get","hot","where","or","if","stop","come","from","red","as","that","our"],4:["cut","must","said","when","off","will","down","so","back","let","were","what","then","this","could","now","tell","well","your","who","home","like","many","right","keep","made","why","would","make","time","all","into","came","gave","about","one"]};
 
-// 2nd grade: teacher's "100 High Frequency Sight Words" card, split into 10 lists of 10 in card order
-const W2={1:["a","is","on","the","an","in","was","are","and","I"],2:["make","by","down","too","who","can","no","there","where","with"],3:["does","for","he","what","yes","have","puts","said","she","to"],4:["get","so","wants","pulls","after","first","new","old","put","were"],5:["her","laugh","my","of","out","will","would","work","you","do"],6:["here","one","start","be","like","from","good","made","went","play"],7:["five","four","three","two","into","see","think","both","wish","sees"],8:["asked","away","how","me","your","ride","they","want","we","white"],9:["little","now","been","could","live","very","worked","over","any","wanted"],10:["way","many","around","eating","look","saw","some","together","being","give"]};
+// 2nd grade: teacher's "100 High Frequency Sight Words" card, split into 10 lists of 10 in card order.
+// List 11+: HMH weekly high-frequency words not already on the card (Wk2: best, does, end, job, left, men, more, see, than, wash — does/see already in lists 3/7)
+const W2={1:["a","is","on","the","an","in","was","are","and","I"],2:["make","by","down","too","who","can","no","there","where","with"],3:["does","for","he","what","yes","have","puts","said","she","to"],4:["get","so","wants","pulls","after","first","new","old","put","were"],5:["her","laugh","my","of","out","will","would","work","you","do"],6:["here","one","start","be","like","from","good","made","went","play"],7:["five","four","three","two","into","see","think","both","wish","sees"],8:["asked","away","how","me","your","ride","they","want","we","white"],9:["little","now","been","could","live","very","worked","over","any","wanted"],10:["way","many","around","eating","look","saw","some","together","being","give"],11:["best","end","job","left","men","more","than","wash"]};
+
+// 2nd grade weekly spelling words from HMH modules, keyed by HMH week number
+const SP2={2:["yes","job","hug","rest","frog","hum","left","melt","plum","shut"]};
 
 let currentGrade='2';
+let wordMode='sight';
 let W=W2;
 
 
@@ -125,10 +134,16 @@ const G=document.getElementById('gameScreen');
 
 function switchGrade(g){
   currentGrade=g;
-  W=g==='K'?WK:g==='2'?W2:W1;
+  W=g==='K'?WK:g==='2'?(wordMode==='spelling'?SP2:W2):W1;
   const maxKey=Math.max(...Object.keys(W).map(Number));
-  // 2nd grade lists aren't chronological, so start at list 1; other grades start at the latest period
-  selectedWeeks=g==='2'?[1]:[maxKey];
+  // 2nd grade sight-word lists aren't chronological, so start at list 1; everything else starts at the latest period
+  selectedWeeks=(g==='2'&&wordMode==='sight')?[1]:[maxKey];
+  renderHome();
+}
+function switchMode(m){
+  wordMode=m;
+  W=m==='spelling'?SP2:W2;
+  selectedWeeks=m==='spelling'?[Math.max(...Object.keys(W).map(Number))]:[1];
   renderHome();
 }
 
@@ -153,21 +168,26 @@ function renderHome(){
   document.getElementById('gradeK').style.background=currentGrade==='K'?'#00b894':'#b2bec3';
   document.getElementById('grade1').style.background=currentGrade==='1'?'#667eea':'#b2bec3';
   document.getElementById('grade2').style.background=currentGrade==='2'?'#e17055':'#b2bec3';
-  document.getElementById('subtitle').textContent=(currentGrade==='K'?'Kindergarten':currentGrade==='2'?'2nd Grade':'1st Grade')+' Sight Words Practice ✨';
-  const maxKey=Math.max(...Object.keys(W).map(Number));
+  const isSpelling=currentGrade==='2'&&wordMode==='spelling';
+  document.getElementById('modeToggle').classList.toggle('hidden',currentGrade!=='2');
+  document.getElementById('modeSight').style.background=!isSpelling?'#f39c12':'#b2bec3';
+  document.getElementById('modeSpelling').style.background=isSpelling?'#e84393':'#b2bec3';
+  document.getElementById('subtitle').textContent=(currentGrade==='K'?'Kindergarten':currentGrade==='2'?'2nd Grade':'1st Grade')+(isSpelling?' Spelling Practice ✨':' Sight Words Practice ✨');
   const isK=currentGrade==='K';
   const qLabels=['','Q1','Q2','Q3','Q4'];
-  document.getElementById('periodLabel').textContent=isK?'📅 Pick Your Quarters':currentGrade==='2'?'📅 Pick Your Word Lists':'📅 Pick Your Weeks';
+  document.getElementById('periodLabel').textContent=isK?'📅 Pick Your Quarters':isSpelling?'📅 Pick Your Weeks':currentGrade==='2'?'📅 Pick Your Word Lists':'📅 Pick Your Weeks';
   const wb=document.getElementById('weekButtons');wb.innerHTML='';
-  for(let w=1;w<=maxKey;w++){const b=document.createElement('button');b.className='week-btn';b.textContent=isK?qLabels[w]:w;b.style.width=isK?'64px':'44px';const a=selectedWeeks.includes(w);b.style.border=a?'none':'2px solid #dfe6e9';b.style.background=a?`linear-gradient(135deg,${STAR_COLORS[w%8]},${STAR_COLORS[(w+3)%8]})`:'white';b.style.color=a?'white':'#636e72';b.style.boxShadow=a?'0 4px 12px rgba(0,0,0,.15)':'none';b.onclick=()=>toggleWeek(w);wb.appendChild(b);}
-  const periodName=isK?'quarter':currentGrade==='2'?'list':'week';
+  // Iterate actual keys: spelling weeks follow HMH numbering and may not start at 1
+  const keys=Object.keys(W).map(Number).sort((x,y)=>x-y);
+  for(const w of keys){const b=document.createElement('button');b.className='week-btn';b.textContent=isK?qLabels[w]:w;b.style.width=isK?'64px':'44px';const a=selectedWeeks.includes(w);b.style.border=a?'none':'2px solid #dfe6e9';b.style.background=a?`linear-gradient(135deg,${STAR_COLORS[w%8]},${STAR_COLORS[(w+3)%8]})`:'white';b.style.color=a?'white':'#636e72';b.style.boxShadow=a?'0 4px 12px rgba(0,0,0,.15)':'none';b.onclick=()=>toggleWeek(w);wb.appendChild(b);}
+  const periodName=isK?'quarter':(currentGrade==='2'&&!isSpelling)?'list':'week';
   document.getElementById('weekInfo').textContent=`${selectedWeeks.length} ${periodName}${selectedWeeks.length>1?'s':''} • ${getWords().length} words`;
   document.getElementById('gameGrid').innerHTML=GAMES.map(g=>`<button class="game-btn" onclick="startGame('${g.id}')"><div style="font-size:32px;margin-bottom:4px" class="wiggle">${g.emoji}</div><div style="font-size:14px;font-weight:600;color:${g.color}">${g.name}</div><div style="font-size:11px;color:#b2bec3;margin-top:2px">${g.desc}</div></button>`).join('');
   document.getElementById('wordPreview').innerHTML=getWords().map(w=>`<span onclick="speak('${esc(w)}')" style="font-size:14px;padding:4px 10px;border-radius:8px;background:#f0f0f0;color:#2d3436;cursor:pointer">${w}</span>`).join('');
 }
 function toggleWeek(w){if(selectedWeeks.includes(w)){if(selectedWeeks.length>1)selectedWeeks=selectedWeeks.filter(x=>x!==w);}else selectedWeeks.push(w);renderHome();}
-function selectAllWeeks(){const maxKey=Math.max(...Object.keys(W).map(Number));selectedWeeks=Array.from({length:maxKey},(_,i)=>i+1);renderHome();}
-function clearWeeks(){const maxKey=Math.max(...Object.keys(W).map(Number));selectedWeeks=currentGrade==='2'?[1]:[maxKey];renderHome();}
+function selectAllWeeks(){selectedWeeks=Object.keys(W).map(Number);renderHome();}
+function clearWeeks(){const keys=Object.keys(W).map(Number);selectedWeeks=(currentGrade==='2'&&wordMode==='sight')?[Math.min(...keys)]:[Math.max(...keys)];renderHome();}
 
 function startGame(mode){if(activeTimer)clearInterval(activeTimer);gameWords=shuffle(getWords());currentGame=mode;showScreen('gameScreen');({flashcards:g1,spelling:g2,match:g3,builder:g4,bingo:g5,missing:g7,speed:g8,read:g9,category:g10,race:g11,pop:g12})[mode]();}
 function replayGame(){startGame(currentGame);}
