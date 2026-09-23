@@ -141,7 +141,7 @@ let W=W2;
 // Recognition games (pick the word you heard) only lift a word to box 2; reaching KNOWN needs reading or spelling it unprompted.
 const IV=[0,1,2,4,7,14],KNOWN=3,STORE='sws.v1';
 const dayNum=()=>{const d=new Date();return Math.floor((d.getTime()-d.getTimezoneOffset()*6e4)/864e5);};
-const KIDS={savvy:{name:'Savvy',emoji:'👧',grade:'2'},logan:{name:'Logan',emoji:'👦',grade:'K'}};
+const KIDS={savvy:{name:'Savvy',emoji:'👧',grade:'2'},logan:{name:'Logan',emoji:'👦',grade:'K'},dad:{name:'Dad',emoji:'🧔',grade:'2',test:true}};
 const DB=(()=>{try{const d=JSON.parse(localStorage.getItem(STORE));if(d&&d.kids)return d;}catch(e){}return{kids:{},voice:''};})();
 for(const[id,k]of Object.entries(KIDS))DB.kids[id]=Object.assign({...k,mode:'sight',sel:{},words:{},days:[]},DB.kids[id]);
 function save(){try{localStorage.setItem(STORE,JSON.stringify(DB));}catch(e){}}
@@ -172,9 +172,11 @@ function todaysWords(){
 function startToday(){startGame(wordMode==='spelling'&&currentGrade==='2'?'spelling':'say',todaysWords());}
 
 function showProfiles(){
-  document.getElementById('kidList').innerHTML=Object.entries(DB.kids).map(([id,k])=>`<button class="game-btn" style="width:140px" onclick="pickKid('${id}')"><div style="font-size:56px">${k.emoji}</div><div style="font-size:22px;font-weight:700;color:#2d3436">${k.name}</div></button>`).join('');
+  // Test profiles get a reset so trying things out never touches the kids' progress
+  document.getElementById('kidList').innerHTML=Object.entries(DB.kids).map(([id,k])=>`<div style="display:flex;flex-direction:column;gap:6px;align-items:center"><button class="game-btn" style="width:140px" onclick="pickKid('${id}')"><div style="font-size:56px">${k.emoji}</div><div style="font-size:22px;font-weight:700;color:#2d3436">${k.name}</div>${k.test?'<div style="font-size:12px;color:#b2bec3">test profile</div>':''}</button>${k.test?`<button class="btn" style="background:#b2bec3;font-size:13px;padding:6px 12px" onclick="resetKid('${id}')">🗑️ Reset progress</button>`:''}</div>`).join('');
   showScreen('profileScreen');
 }
+function resetKid(id){if(!confirm(`Erase all progress for ${DB.kids[id].name}?`))return;Object.assign(DB.kids[id],{words:{},days:[],sel:{}});save();showProfiles();}
 function pickKid(id){
   P=DB.kids[id];currentGrade=P.grade;wordMode=P.mode;custom=null;
   W=currentGrade==='K'?WK:currentGrade==='2'?(wordMode==='spelling'?SP2:W2):W1;
