@@ -40,10 +40,22 @@ input{font-family:'Fredoka',sans-serif}
   <div class="float"><span style="font-size:44px">📚</span></div>
   <h1 class="gradient-title">Sight Word Stars</h1>
   <p id="subtitle" style="font-size:14px;color:#636e72">Sight Words Practice ✨</p>
+  <div id="kidBar" class="hidden" style="display:flex;gap:10px;justify-content:center;align-items:center;margin-top:10px;flex-wrap:wrap">
+    <button id="kidBtn" class="btn" style="background:#fff;color:#2d3436;font-size:16px;font-weight:600;box-shadow:0 4px 14px rgba(0,0,0,.1)" onclick="showProfiles()"></button>
+    <span id="kidStats" style="font-size:14px;color:#636e72"></span>
+  </div>
 </div>
 
 <div class="container">
-  <div id="homeScreen">
+  <div id="profileScreen" class="hidden" style="text-align:center">
+    <div class="card-box">
+      <h2 style="font-size:26px;font-weight:700;color:#2d3436;margin-bottom:18px">Who's practicing? 👋</h2>
+      <div id="kidList" style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap"></div>
+    </div>
+  </div>
+
+  <div id="homeScreen" class="hidden">
+    <button class="game-btn" style="width:100%;margin-bottom:16px;background:linear-gradient(135deg,#FFD700,#FF6B6B);color:#fff" onclick="startToday()"><div style="font-size:26px;font-weight:700">☀️ Today's Practice</div><div id="todayDesc" style="font-size:14px;margin-top:4px;opacity:.95"></div></button>
     <div class="card-box" style="padding:16px">
       <div style="display:flex;gap:8px;justify-content:center;margin-bottom:14px">
         <button id="gradeK" class="btn" style="font-size:15px;padding:10px 20px" onclick="switchGrade('K')">🧒 Kindergarten</button>
@@ -70,7 +82,8 @@ input{font-family:'Fredoka',sans-serif}
       </div>
     </div>
     <div class="card-box" style="margin-top:16px">
-      <h3 style="font-size:16px;font-weight:600;color:#2d3436;margin-bottom:8px">👀 Words to Practice</h3>
+      <h3 style="font-size:16px;font-weight:600;color:#2d3436;margin-bottom:4px">👀 Words in This Set</h3>
+      <p style="font-size:12px;color:#636e72;margin-bottom:8px"><span style="background:#d5f5e3;padding:1px 6px;border-radius:6px">known</span> <span style="background:#ffeaa7;padding:1px 6px;border-radius:6px">learning</span> <span style="background:#fadbd8;padding:1px 6px;border-radius:6px">tricky</span> <span style="background:#f0f0f0;padding:1px 6px;border-radius:6px">new</span> · tap to hear</p>
       <div id="wordPreview" style="display:flex;flex-wrap:wrap;gap:6px"></div>
     </div>
   </div>
@@ -106,9 +119,71 @@ const W2_LABELS={11:"Wk 2",12:"Wk 3",13:"Wk 4"};
 // 2nd grade weekly spelling words from HMH modules, keyed by HMH week number
 const SP2={1:["sad","bit","jam","glad","list","win","flat","if","fix","rip"],2:["yes","job","hug","rest","frog","hum","left","melt","plum","shut"],3:["cake","mine","plate","size","ate","grape","prize","wipe","race","line"],4:["doze","nose","use","rose","pole","close","June","woke","rule","rode","role","tune"]};
 
+// Phonics focus per SP2 week: pattern groups for Pattern Sort, short->long pairs for Magic E (VCe weeks only)
+const PHONICS2={
+1:{sort:{"short a (sad)":["sad","jam","glad","flat"],"short i (bit)":["bit","list","win","if","fix","rip"]}},
+2:{sort:{"short e (yes)":["yes","rest","left","melt"],"short o (job)":["job","frog"],"short u (hug)":["hug","hum","plum","shut"]}},
+3:{sort:{"a_e (cake)":["cake","plate","ate","grape","race"],"i_e (mine)":["mine","size","prize","wipe","line"]},magic:[["cap","cape"],["tap","tape"],["can","cane"],["mad","made"],["pin","pine"],["kit","kite"],["rip","ripe"],["hid","hide"]]},
+4:{sort:{"o_e (rode)":["doze","nose","rose","pole","close","woke","rode","role"],"u_e (June)":["use","June","rule","tune"]},magic:[["rod","rode"],["hop","hope"],["not","note"],["rob","robe"],["cub","cube"],["tub","tube"],["us","use"],["cut","cute"]]}};
+
+// One sentence per word: read in Read to Me, blanked in Fill the Gap, spoken in Paper Test dictation.
+// Every list word needs an entry; no double quotes (they end up inside onclick attributes).
+const SENT={"a":"I have a red ball.","about":"Tell me about your day.","after":"We play after lunch.","again":"Can we read it again?","air":"The balloon went up in the air.","all":"We all like pizza.","almost":"It is almost time for bed.","along":"The dog walks along the path.","also":"I also like to swim.","always":"I always brush my teeth.","am":"I am so happy today.","an":"I ate an apple.","and":"Mom and Dad came home.","animal":"A cat is my favorite animal.","another":"May I have another cookie?","answer":"Raise your hand to answer.","any":"Do you have any snacks?","are":"We are going to the park.","around":"The dog ran around the tree.","as":"We sang as we walked.","asked":"She asked for a glass of milk.","at":"Look at the big dog.","ate":"We ate pizza for dinner.","away":"The bird flew away.","back":"Come back soon!","be":"I want to be a doctor.","because":"I wore a coat because it was cold.","been":"I have been to the zoo.","before":"Wash your hands before you eat.","began":"The rain began to fall.","being":"Thank you for being kind.","below":"The fish swim below the boat.","best":"You are my best friend.","better":"My cold is better today.","between":"I sit between Mom and Dad.","big":"The elephant is very big.","bit":"The dog bit the bone.","both":"We both like to sing.","boy":"The boy kicked the ball.","bring":"Please bring your book.","brown":"The bear is brown.","but":"I like cats, but I love dogs.","buy":"We buy milk at the store.","by":"Sit by me.","cake":"We ate cake at the party.","call":"Call me on the phone.","came":"My friend came to play.","can":"I can ride a bike.","carry":"Can you carry this box?","children":"The children play outside.","close":"Please close the door.","cold":"The snow is cold.","come":"Come to my house.","could":"I could see the moon.","cut":"Mom cut the apple.","did":"I did my homework.","different":"Each leaf is different.","do":"What do you want to eat?","does":"Does your dog like to swim?","don't":"I don't like the rain.","done":"I am done with my snack.","door":"Knock on the door.","down":"The ball rolled down the hill.","doze":"Grandpa likes to doze in his chair.","draw":"I like to draw pictures.","drink":"I drink water every day.","eat":"We eat lunch at noon.","eating":"The cat is eating its food.","eight":"A spider has eight legs.","end":"That is the end of the story.","enough":"Do we have enough cups?","even":"He can even jump rope.","ever":"Have you ever seen a whale?","eyes":"My cat has green eyes.","fall":"Leaves fall from the trees.","family":"My family eats dinner together.","far":"The moon is far away.","father":"My father reads to me.","few":"I have a few coins.","find":"Can you find my shoe?","fire":"The fire is warm.","first":"I was first in line.","five":"A starfish has five arms.","fix":"Dad can fix the bike.","flat":"The tire is flat.","food":"The dog wants food.","for":"This gift is for you.","found":"I found my lost sock.","four":"A dog has four legs.","frog":"The frog jumped in the pond.","from":"I got a letter from Grandma.","front":"Stand in front of the class.","full":"My cup is full.","funny":"The clown is funny.","gave":"She gave me a hug.","get":"Did you get my note?","girl":"The girl rode her bike.","give":"Give the dog a bone.","gives":"Mom gives me a kiss.","glad":"I am glad you are here.","go":"We go to the park.","goes":"The bus goes to school.","going":"We are going on a trip.","good":"This soup is good.","got":"I got a new book.","grape":"I ate a green grape.","grow":"Plants grow in the sun.","had":"I had fun at the park.","has":"She has a pet fish.","have":"I have two cats.","he":"He is my brother.","heads":"The kids nod their heads.","hear":"I hear a bird singing.","help":"Can you help me?","her":"I like her hat.","here":"Come here, puppy!","him":"I gave him a toy.","his":"That is his bike.","hold":"Hold my hand.","home":"It is time to go home.","hot":"The soup is hot.","house":"My house is blue.","how":"How old are you?","hug":"Give me a big hug.","hum":"I like to hum a song.","hurt":"I hurt my knee.","I":"I like to play.","if":"Ask me if you need help.","in":"The cat is in the box.","into":"The frog jumped into the pond.","is":"The sky is blue.","it":"Throw it to me.","jam":"I like jam on my toast.","job":"My job is to feed the dog.","jump":"I can jump high.","June":"School ends in June.","just":"I just woke up.","keep":"You can keep the book.","know":"I know how to swim.","laugh":"Jokes make me laugh.","left":"Turn left at the corner.","let":"Let me see.","let's":"Let's play a game.","life":"Fish live their whole life in water.","like":"I like to swim.","line":"Stand in a line.","list":"Mom made a shopping list.","little":"The kitten is little.","live":"We live in a house.","long":"The snake is long.","look":"Look at the stars!","lot":"I ate a lot of pie.","made":"We made a cake.","make":"We make a fort.","man":"The man has a hat.","many":"How many dogs do you see?","may":"May I have a drink?","maybe":"Maybe it will snow.","me":"Play with me.","melt":"The ice will melt in the sun.","men":"Two men fixed the road.","mine":"That toy is mine.","more":"Can I have more milk?","mother":"My mother sings to me.","move":"Do not move!","must":"We must be quiet.","my":"This is my dog.","myself":"I did it myself!","name":"My name is on my paper.","nearest":"Go to the nearest door.","never":"I never eat bugs.","new":"I have new shoes.","no":"No, thank you.","nose":"My dog has a wet nose.","not":"I am not tired.","now":"Clean your room now.","of":"I drank a glass of milk.","off":"Turn off the light.","old":"My grandpa is old.","on":"The cat sat on the mat.","once":"Once there was a king.","one":"I have one sister.","only":"I have only one shoe.","open":"Open the box.","or":"Do you want milk or juice?","other":"Where is my other sock?","our":"This is our house.","out":"The dog wants to go out.","over":"The cow jumped over the moon.","own":"I have my own room.","people":"Many people came to the show.","plate":"Put the food on the plate.","play":"Kids play tag at recess.","plum":"The plum is purple.","point":"Point to the red one.","pole":"The flag is on a tall pole.","pretty":"The flower is pretty.","prize":"I won a prize!","pull":"Pull the wagon.","pulls":"The horse pulls the cart.","put":"Put the toys away.","puts":"He puts on his shoes.","race":"We race to the tree.","ran":"The dog ran fast.","read":"I love to read books.","really":"I really like ice cream.","red":"The apple is red.","rest":"I need to rest.","ride":"I ride the bus to school.","right":"Raise your right hand.","rip":"Do not rip the paper.","rode":"She rode her bike to school.","role":"I had a big role in the play.","rose":"The rose smells sweet.","round":"A ball is round.","rule":"Follow the rule.","sad":"The puppy looks sad.","said":"Mom said yes!","saw":"I saw a rainbow.","say":"What did you say?","says":"My teacher says hello.","see":"I see a bird.","sees":"The cat sees a mouse.","set":"Help me set the table.","seven":"There are seven days in a week.","shall":"Shall we go outside?","she":"She is my sister.","should":"You should wear a coat.","shouted":"The boy shouted for help.","shows":"The map shows the way.","shut":"Shut the door, please.","sing":"We sing a song.","sits":"The cat sits on my lap.","six":"A bug has six legs.","size":"What size are your shoes?","small":"A mouse is small.","so":"I am so happy!","some":"Can I have some juice?","something":"I see something in the tree.","soon":"We will eat soon.","start":"Time to start the game.","started":"It started to rain.","stop":"Stop at the red light.","sure":"Are you sure?","takes":"She takes the bus.","talk":"We talk at lunch.","teacher":"My teacher is nice.","tell":"Tell me a story.","ten":"I can count to ten.","than":"A dog is bigger than a cat.","thank":"I thank my mom for dinner.","that":"Look at that bird!","the":"The sun is hot.","their":"The kids got their coats.","then":"Eat, then play.","there":"Put it over there.","they":"They are my friends.","things":"I put my things away.","think":"I think it will rain.","this":"This is fun!","three":"I have three fish.","through":"We walked through the woods.","time":"What time is it?","to":"I go to school.","today":"It is sunny today.","together":"We play together.","too":"I want to come too!","tune":"Hum a happy tune.","two":"I have two hands.","under":"The cat is under the bed.","until":"Wait until I get there.","up":"Look up at the sky.","upon":"The cat sat upon the wall.","us":"Come with us.","use":"Use a pencil to write.","very":"I am very happy.","voice":"Use a quiet voice.","walk":"We walk to the park.","want":"I want a snack.","wanted":"I wanted to play.","wants":"The baby wants her bottle.","warm":"The blanket is warm.","was":"It was a sunny day.","wash":"Wash your hands.","water":"Fish live in water.","way":"Which way do we go?","we":"We like to dance.","well":"I feel well today.","went":"We went to the beach.","were":"We were at the zoo.","what":"What is your name?","when":"When is lunch?","where":"Where is my hat?","white":"Snow is white.","who":"Who is at the door?","why":"Why is the sky blue?","will":"I will help you.","win":"I hope we win!","wipe":"Wipe your feet.","wish":"I wish I could fly.","with":"Come with me.","woke":"I woke up early.","woman":"The woman has a red hat.","won't":"The car won't start.","words":"I can read these words.","work":"Dad goes to work.","worked":"We worked hard.","would":"Would you like a cookie?","yes":"Yes, I can do it!","you":"I love you.","your":"Is this your coat?"};
+// Whole-word match that keeps apostrophes inside words (don't, let's)
+const wordRe=w=>new RegExp("(^|[^A-Za-z'])("+w+")(?![A-Za-z'])","i");
+
 let currentGrade='2';
 let wordMode='sight';
 let W=W2;
+
+// ===== KIDS & PROGRESS (saved on this device) =====
+// Spaced review: a word in box n comes back after IV[n] days; a miss drops it to box 0.
+// Recognition games (pick the word you heard) only lift a word to box 2; reaching KNOWN needs reading or spelling it unprompted.
+const IV=[0,1,2,4,7,14],KNOWN=3,STORE='sws.v1';
+const dayNum=()=>{const d=new Date();return Math.floor((d.getTime()-d.getTimezoneOffset()*6e4)/864e5);};
+const KIDS={savvy:{name:'Savvy',emoji:'👧',grade:'2'},logan:{name:'Logan',emoji:'👦',grade:'K'}};
+const DB=(()=>{try{const d=JSON.parse(localStorage.getItem(STORE));if(d&&d.kids)return d;}catch(e){}return{kids:{},voice:''};})();
+for(const[id,k]of Object.entries(KIDS))DB.kids[id]=Object.assign({...k,mode:'sight',sel:{},words:{},days:[]},DB.kids[id]);
+function save(){try{localStorage.setItem(STORE,JSON.stringify(DB));}catch(e){}}
+let P=null,recorded=new Set(),custom=null,lastWords=null;
+
+function status(w){const s=P&&P.words[w];return!s?'new':s.b>=KNOWN?'known':s.m?'tricky':'learning';}
+// Only the first answer per word per game counts, so retries and re-queues don't inflate progress
+function rec(w,ok,recall){if(!P||recorded.has(w))return;recorded.add(w);const s=P.words[w]||(P.words[w]={b:0,d:0,c:0,m:0});if(ok){s.c++;if(recall||s.b<2)s.b=Math.min(s.b+1,IV.length-1);}else{s.m++;s.b=0;}s.d=dayNum()+IV[s.b];save();}
+function markDay(){if(!P)return;const t=dayNum();if(!P.days.includes(t)){P.days=[...P.days,t].slice(-400);save();}}
+function streak(){const s=new Set(P.days);let t=dayNum(),n=0;if(!s.has(t))t--;while(s.has(t)){n++;t--;}return n;}
+function allWords(){return[...new Set(Object.values(W).flat())];}
+function trickyWords(){return allWords().filter(w=>status(w)==='tricky').sort((a,b)=>P.words[b].m-P.words[a].m).slice(0,12);}
+
+// Incremental rehearsal: each not-yet-known word from the current lists sits between two easier ones,
+// plus older words whose review day has come
+function todaysWords(){
+  const t=dayNum(),cur=weekWords(),rank={tricky:0,learning:1,new:2};
+  const focus=cur.filter(w=>status(w)!=='known').sort((a,b)=>rank[status(a)]-rank[status(b)]).slice(0,4);
+  const due=allWords().filter(w=>!focus.includes(w)&&P.words[w]&&P.words[w].d<=t).sort((a,b)=>P.words[a].b-P.words[b].b).slice(0,4);
+  const easy=shuffle(allWords().filter(w=>status(w)==='known'&&!due.includes(w))).slice(0,Math.max(0,12-focus.length-due.length));
+  const rest=shuffle([...due,...easy]),out=[];
+  focus.forEach(w=>out.push(w,...rest.splice(0,2)));
+  const words=[...out,...rest];
+  // First sessions have nothing known or due yet, so pad with the current lists
+  for(const w of shuffle(cur))if(words.length<8&&!words.includes(w))words.push(w);
+  return words;
+}
+function startToday(){startGame(wordMode==='spelling'&&currentGrade==='2'?'spelling':'say',todaysWords());}
+
+function showProfiles(){
+  document.getElementById('kidList').innerHTML=Object.entries(DB.kids).map(([id,k])=>`<button class="game-btn" style="width:140px" onclick="pickKid('${id}')"><div style="font-size:56px">${k.emoji}</div><div style="font-size:22px;font-weight:700;color:#2d3436">${k.name}</div></button>`).join('');
+  showScreen('profileScreen');
+}
+function pickKid(id){
+  P=DB.kids[id];currentGrade=P.grade;wordMode=P.mode;custom=null;
+  W=currentGrade==='K'?WK:currentGrade==='2'?(wordMode==='spelling'?SP2:W2):W1;
+  selectedWeeks=defaultSel();showScreen('homeScreen');renderHome();
+}
+const selKey=()=>currentGrade+':'+wordMode;
+// Remembered selection if still valid, else the newest list (newest HMH week for 2nd grade)
+function defaultSel(){const saved=(P.sel[selKey()]||[]).filter(k=>W[k]);return saved.length?saved:[Math.max(...Object.keys(W).map(Number))];}
+function saveSel(){P.sel[selKey()]=selectedWeeks;save();}
 
 
 const CATEGORIES={"Action Words":["jump","walk","play","eat","make","call","draw","read","pull","carry","bring","move","grow","wash","drink","talk","laugh","find"],"Describing Words":["good","little","pretty","cold","full","long","old","small","different","warm","better","round","white","far"],"Question Words":["who","what","where","why","how"],
@@ -119,7 +194,15 @@ const STAR_COLORS=["#FFD700","#FF6B6B","#4ECDC4","#45B7D1","#96CEB4","#FFEAA7","
 const CELEBRATIONS=["🎉","⭐","🌟","✨","🎊","💫","🏆","👏","🥳","💪"];
 const CARD_COLORS=["#FF6B6B","#4ECDC4","#45B7D1","#96CEB4","#DDA0DD","#FFEAA7"];
 
+// `when` limits a game to selections it can work with; spelling-only games need 2nd-grade spelling mode
+const isSpell=()=>currentGrade==='2'&&wordMode==='spelling';
+const phon=k=>isSpell()&&!custom?selectedWeeks.flatMap(w=>(PHONICS2[w]||{})[k]?[PHONICS2[w][k]]:[]):[];
 const GAMES=[
+  {id:"say",emoji:"🗣️",name:"Say It!",desc:"Read it out loud",color:"#d35400"},
+  {id:"test",emoji:"📝",name:"Paper Test",desc:"Write it on paper",color:"#2d3436",when:isSpell},
+  {id:"magic",emoji:"🪄",name:"Magic E",desc:"Make vowels say their name",color:"#8e44ad",when:()=>phon('magic').length>0},
+  {id:"pattern",emoji:"🗂️",name:"Pattern Sort",desc:"Sort by sound",color:"#16a085",when:()=>phon('sort').length>0},
+  {id:"cloze",emoji:"💬",name:"Fill the Gap",desc:"Finish the sentence",color:"#c0392b"},
   {id:"flashcards",emoji:"🃏",name:"Flashcards",desc:"Read & recognize",color:"#667eea"},
   {id:"spelling",emoji:"✏️",name:"Spelling Bee",desc:"Listen & type",color:"#e17055"},
   {id:"match",emoji:"🧩",name:"Memory Match",desc:"Find the pairs",color:"#00b894"},
@@ -128,7 +211,7 @@ const GAMES=[
   {id:"missing",emoji:"🔍",name:"Missing Letter",desc:"Fill the blank",color:"#0984e3"},
   {id:"speed",emoji:"⚡",name:"Speed Read",desc:"Read it fast!",color:"#f39c12"},
   {id:"read",emoji:"📖",name:"Read to Me",desc:"Practice reading",color:"#00cec9"},
-  {id:"category",emoji:"📦",name:"Word Sort",desc:"Sort into groups",color:"#a29bfe"},
+  {id:"category",emoji:"📦",name:"Word Sort",desc:"Sort into groups",color:"#a29bfe",when:()=>!isSpell()},
   {id:"race",emoji:"🏁",name:"Word Race",desc:"Pick 1 of 2, fast!",color:"#e84393"},
   {id:"pop",emoji:"🫧",name:"Pop the Word",desc:"Tap the bubbles!",color:"#00b894"}
 ];
@@ -137,17 +220,15 @@ let selectedWeeks=[1],gameWords=[],currentGame=null,selectedVoice=null,activeTim
 const G=document.getElementById('gameScreen');
 
 function switchGrade(g){
-  currentGrade=g;
+  currentGrade=P.grade=g;custom=null;
   W=g==='K'?WK:g==='2'?(wordMode==='spelling'?SP2:W2):W1;
-  const maxKey=Math.max(...Object.keys(W).map(Number));
-  // 2nd grade sight-word lists aren't chronological, so start at list 1; everything else starts at the latest period
-  selectedWeeks=(g==='2'&&wordMode==='sight')?[1]:[maxKey];
+  selectedWeeks=defaultSel();save();
   renderHome();
 }
 function switchMode(m){
-  wordMode=m;
+  wordMode=P.mode=m;custom=null;
   W=m==='spelling'?SP2:W2;
-  selectedWeeks=m==='spelling'?[Math.max(...Object.keys(W).map(Number))]:[1];
+  selectedWeeks=defaultSel();save();
   renderHome();
 }
 
@@ -156,13 +237,14 @@ function speak(t,r=0.8){if('speechSynthesis'in window){speechSynthesis.cancel();
 function esc(s){return s.replace(/'/g,"\\'");}
 function progress(c,m){const p=m>0?(c/m)*100:0;return`<div style="display:flex;align-items:center;gap:10px;justify-content:center;margin:4px 0"><div class="progress-bar"><div class="progress-fill" style="width:${p}%"></div></div><span style="font-size:16px;font-weight:600;color:#2d3436">⭐ ${c}/${m}</span></div>`;}
 function confetti(){const e=document.getElementById('confetti');e.classList.remove('hidden');e.innerHTML=Array.from({length:20}).map(()=>`<div style="position:absolute;left:${Math.random()*100}%;top:-5%;font-size:${20+Math.random()*30}px;animation:confettiFall ${1.5+Math.random()*2}s ease-in forwards;animation-delay:${Math.random()*.5}s">${CELEBRATIONS[Math.floor(Math.random()*CELEBRATIONS.length)]}</div>`).join('');setTimeout(()=>{e.classList.add('hidden');e.innerHTML='';},4000);}
-function showScreen(id){['homeScreen','gameScreen','resultsScreen'].forEach(s=>document.getElementById(s).classList.add('hidden'));document.getElementById(id).classList.remove('hidden');document.getElementById('homeBtn').classList.toggle('hidden',id==='homeScreen');}
-function getWords(){let w=[];selectedWeeks.forEach(wk=>w.push(...W[wk]));return[...new Set(w)];}
-function finish(score){if(activeTimer)clearInterval(activeTimer);if(typeof pw!=='undefined'&&pw&&pw.raf)cancelAnimationFrame(pw.raf);speechSynthesis.cancel();confetti();setTimeout(()=>{document.getElementById('resultText').innerHTML=`You got <strong style="color:#2ecc71">${score}</strong> stars! ⭐`;showScreen('resultsScreen');},2000);}
+function showScreen(id){document.getElementById('kidBar').classList.toggle('hidden',id!=='homeScreen');['profileScreen','homeScreen','gameScreen','resultsScreen'].forEach(s=>document.getElementById(s).classList.add('hidden'));document.getElementById(id).classList.remove('hidden');document.getElementById('homeBtn').classList.toggle('hidden',id==='homeScreen'||id==='profileScreen');}
+function weekWords(){let w=[];selectedWeeks.forEach(wk=>w.push(...W[wk]));return[...new Set(w)];}
+function getWords(){return custom||weekWords();}
+function finish(score){if(activeTimer)clearInterval(activeTimer);if(typeof pw!=='undefined'&&pw&&pw.raf)cancelAnimationFrame(pw.raf);speechSynthesis.cancel();markDay();confetti();setTimeout(()=>{document.getElementById('resultText').innerHTML=`You got <strong style="color:#2ecc71">${score}</strong> stars! ⭐`;showScreen('resultsScreen');},2000);}
 
 // Voice
-function loadVoices(){const v=speechSynthesis.getVoices().filter(v=>v.lang.startsWith('en'));const s=document.getElementById('voiceSelect');s.innerHTML='<option value="">Default</option>'+v.map(x=>`<option value="${x.name}">${x.name.replace(/Microsoft |Google |Apple /g,'')}</option>`).join('');const p=v.find(x=>/samantha|karen|daniel|moira|rishi|google.*female/i.test(x.name));if(p&&!selectedVoice){selectedVoice=p;s.value=p.name;}}
-function changeVoice(){const v=speechSynthesis.getVoices().filter(v=>v.lang.startsWith('en'));selectedVoice=v.find(x=>x.name===document.getElementById('voiceSelect').value)||null;speak("Hello!");}
+function loadVoices(){const v=speechSynthesis.getVoices().filter(v=>v.lang.startsWith('en'));const s=document.getElementById('voiceSelect');s.innerHTML='<option value="">Default</option>'+v.map(x=>`<option value="${x.name}">${x.name.replace(/Microsoft |Google |Apple /g,'')}</option>`).join('');const p=v.find(x=>x.name===DB.voice)||v.find(x=>/samantha|karen|daniel|moira|rishi|google.*female/i.test(x.name));if(p&&!selectedVoice){selectedVoice=p;s.value=p.name;}}
+function changeVoice(){const v=speechSynthesis.getVoices().filter(v=>v.lang.startsWith('en'));selectedVoice=v.find(x=>x.name===document.getElementById('voiceSelect').value)||null;DB.voice=selectedVoice?selectedVoice.name:'';save();speak("Hello!");}
 if('speechSynthesis'in window){loadVoices();speechSynthesis.onvoiceschanged=loadVoices;}
 
 // Home
@@ -183,25 +265,35 @@ function renderHome(){
   const wb=document.getElementById('weekButtons');wb.innerHTML='';
   // Iterate actual keys: spelling weeks follow HMH numbering and may not start at 1
   const keys=Object.keys(W).map(Number).sort((x,y)=>x-y);
-  for(const w of keys){const b=document.createElement('button');b.className='week-btn';const lbl=isK?qLabels[w]:(currentGrade==='2'&&!isSpelling&&W2_LABELS[w])?W2_LABELS[w]:w;b.textContent=lbl;b.style.width=(isK||String(lbl).length>2)?'64px':'44px';const a=selectedWeeks.includes(w);b.style.border=a?'none':'2px solid #dfe6e9';b.style.background=a?`linear-gradient(135deg,${STAR_COLORS[w%8]},${STAR_COLORS[(w+3)%8]})`:'white';b.style.color=a?'white':'#636e72';b.style.boxShadow=a?'0 4px 12px rgba(0,0,0,.15)':'none';b.onclick=()=>toggleWeek(w);wb.appendChild(b);}
+  for(const w of keys){const b=document.createElement('button');b.className='week-btn';const lbl=isK?qLabels[w]:(currentGrade==='2'&&!isSpelling&&W2_LABELS[w])?W2_LABELS[w]:w;b.textContent=lbl;b.style.width=(isK||String(lbl).length>2)?'64px':'44px';const a=!custom&&selectedWeeks.includes(w);b.style.border=a?'none':'2px solid #dfe6e9';b.style.background=a?`linear-gradient(135deg,${STAR_COLORS[w%8]},${STAR_COLORS[(w+3)%8]})`:'white';b.style.color=a?'white':'#636e72';b.style.boxShadow=a?'0 4px 12px rgba(0,0,0,.15)':'none';b.onclick=()=>toggleWeek(w);wb.appendChild(b);}
+  const tricky=trickyWords();
+  if(tricky.length){const b=document.createElement('button');b.className='week-btn';b.textContent=`🔥 Tricky (${tricky.length})`;b.style.width='auto';b.style.padding='0 12px';b.style.border=custom?'none':'2px solid #fadbd8';b.style.background=custom?'linear-gradient(135deg,#e74c3c,#fd79a8)':'white';b.style.color=custom?'white':'#e74c3c';b.onclick=()=>{custom=custom?null:tricky;renderHome();};wb.appendChild(b);}
+  if(custom&&!tricky.length)custom=null;
+  else if(custom)custom=tricky;
   const periodName=isK?'quarter':(currentGrade==='2'&&!isSpelling)?'list':'week';
-  document.getElementById('weekInfo').textContent=`${selectedWeeks.length} ${periodName}${selectedWeeks.length>1?'s':''} • ${getWords().length} words`;
-  document.getElementById('gameGrid').innerHTML=GAMES.map(g=>`<button class="game-btn" onclick="startGame('${g.id}')"><div style="font-size:32px;margin-bottom:4px" class="wiggle">${g.emoji}</div><div style="font-size:14px;font-weight:600;color:${g.color}">${g.name}</div><div style="font-size:11px;color:#b2bec3;margin-top:2px">${g.desc}</div></button>`).join('');
-  document.getElementById('wordPreview').innerHTML=getWords().map(w=>`<span onclick="speak('${esc(w)}')" style="font-size:14px;padding:4px 10px;border-radius:8px;background:#f0f0f0;color:#2d3436;cursor:pointer">${w}</span>`).join('');
+  document.getElementById('weekInfo').textContent=custom?`🔥 Tricky words • ${custom.length} words`:`${selectedWeeks.length} ${periodName}${selectedWeeks.length>1?'s':''} • ${getWords().length} words`;
+  const pool=allWords(),known=pool.filter(w=>status(w)==='known').length,st=streak();
+  document.getElementById('kidBtn').textContent=`${P.emoji} ${P.name} ⇄`;
+  document.getElementById('kidStats').textContent=`⭐ ${known}/${pool.length} known${st?` · 🔥 ${st} day${st>1?'s':''} in a row`:''}`;
+  document.getElementById('todayDesc').textContent=isSpelling?'Spell a mix of new, tricky and review words':'Read a mix of new, tricky and review words';
+  document.getElementById('gameGrid').innerHTML=GAMES.filter(g=>!g.when||g.when()).map(g=>`<button class="game-btn" onclick="startGame('${g.id}')"><div style="font-size:32px;margin-bottom:4px" class="wiggle">${g.emoji}</div><div style="font-size:14px;font-weight:600;color:${g.color}">${g.name}</div><div style="font-size:11px;color:#b2bec3;margin-top:2px">${g.desc}</div></button>`).join('');
+  const BG={known:'#d5f5e3',learning:'#ffeaa7',tricky:'#fadbd8',new:'#f0f0f0'};
+  document.getElementById('wordPreview').innerHTML=getWords().map(w=>`<span onclick="speak('${esc(w)}')" style="font-size:14px;padding:4px 10px;border-radius:8px;background:${BG[status(w)]};color:#2d3436;cursor:pointer">${w}</span>`).join('');
 }
-function toggleWeek(w){if(selectedWeeks.includes(w)){if(selectedWeeks.length>1)selectedWeeks=selectedWeeks.filter(x=>x!==w);}else selectedWeeks.push(w);renderHome();}
-function selectAllWeeks(){selectedWeeks=Object.keys(W).map(Number);renderHome();}
-function clearWeeks(){const keys=Object.keys(W).map(Number);selectedWeeks=(currentGrade==='2'&&wordMode==='sight')?[Math.min(...keys)]:[Math.max(...keys)];renderHome();}
+function toggleWeek(w){if(custom){custom=null;selectedWeeks=[w];}else if(selectedWeeks.includes(w)){if(selectedWeeks.length>1)selectedWeeks=selectedWeeks.filter(x=>x!==w);}else selectedWeeks.push(w);saveSel();renderHome();}
+function selectAllWeeks(){custom=null;selectedWeeks=Object.keys(W).map(Number);saveSel();renderHome();}
+function clearWeeks(){custom=null;selectedWeeks=[Math.max(...Object.keys(W).map(Number))];saveSel();renderHome();}
 
-function startGame(mode){if(activeTimer)clearInterval(activeTimer);gameWords=shuffle(getWords());currentGame=mode;showScreen('gameScreen');({flashcards:g1,spelling:g2,match:g3,builder:g4,bingo:g5,missing:g7,speed:g8,read:g9,category:g10,race:g11,pop:g12})[mode]();}
-function replayGame(){startGame(currentGame);}
+// words: a fixed, already-ordered list (Today's Practice); otherwise the current selection, shuffled
+function startGame(mode,words){if(activeTimer)clearInterval(activeTimer);lastWords=words||null;recorded=new Set();gameWords=words?[...words]:shuffle(getWords());currentGame=mode;showScreen('gameScreen');({say:g13,test:g14,magic:g15,pattern:g16,cloze:g17,flashcards:g1,spelling:g2,match:g3,builder:g4,bingo:g5,missing:g7,speed:g8,read:g9,category:g10,race:g11,pop:g12})[mode]();}
+function replayGame(){startGame(currentGame,lastWords);}
 
 // ===== 1. FLASHCARDS =====
 let fc;
 function g1(){fc={i:0,s:0,f:false};r1();}
 function r1(){
   const w=gameWords[fc.i];
-  G.innerHTML=`<p style="font-size:16px;color:#7f8c8d;margin-bottom:8px">Card ${fc.i+1} of ${gameWords.length}</p>${progress(fc.s,gameWords.length)}<div onclick="f1()" style="margin:24px auto;width:280px;height:200px;border-radius:24px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 12px 40px rgba(0,0,0,.15);background:${fc.f?'linear-gradient(135deg,#a8edea,#fed6e3)':'linear-gradient(135deg,#667eea,#764ba2)'}">${fc.f?`<span style="font-size:56px;font-weight:600;color:#2d3436">${w}</span>`:'<div style="color:#fff;text-align:center"><span style="font-size:48px">🃏</span><p style="font-size:18px;margin-top:8px">Tap to reveal!</p></div>'}</div>${fc.f?`<div style="display:flex;gap:14px;justify-content:center;margin-top:16px;flex-wrap:wrap"><button class="btn" style="background:#45B7D1" onclick="speak('${esc(w)}')">🔊 Hear it</button><button class="btn" style="background:#2ecc71" onclick="fc.s++;n1()">✅ I know it!</button><button class="btn" style="background:#e74c3c" onclick="n1()">🔄 Practice</button></div>`:''}`;
+  G.innerHTML=`<p style="font-size:16px;color:#7f8c8d;margin-bottom:8px">Card ${fc.i+1} of ${gameWords.length}</p>${progress(fc.s,gameWords.length)}<div onclick="f1()" style="margin:24px auto;width:280px;height:200px;border-radius:24px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 12px 40px rgba(0,0,0,.15);background:${fc.f?'linear-gradient(135deg,#a8edea,#fed6e3)':'linear-gradient(135deg,#667eea,#764ba2)'}">${fc.f?`<span style="font-size:56px;font-weight:600;color:#2d3436">${w}</span>`:'<div style="color:#fff;text-align:center"><span style="font-size:48px">🃏</span><p style="font-size:18px;margin-top:8px">Tap to reveal!</p></div>'}</div>${fc.f?`<div style="display:flex;gap:14px;justify-content:center;margin-top:16px;flex-wrap:wrap"><button class="btn" style="background:#45B7D1" onclick="speak('${esc(w)}')">🔊 Hear it</button><button class="btn" style="background:#2ecc71" onclick="fc.s++;rec('${esc(w)}',true,true);n1()">✅ I know it!</button><button class="btn" style="background:#e74c3c" onclick="rec('${esc(w)}',false);n1()">🔄 Practice</button></div>`:''}`;
 }
 function f1(){if(speechSynthesis)speechSynthesis.cancel();fc.f=true;r1();}
 function n1(){fc.f=false;if(fc.i+1>=gameWords.length)finish(fc.s);else{fc.i++;setTimeout(r1,200);}}
@@ -216,8 +308,8 @@ function r2(){
 }
 function c2(){
   const inp=document.getElementById('spI'),w=gameWords[sp.i];
-  if(inp.value.trim().toLowerCase()===w.toLowerCase()){sp.s++;inp.style.border='3px solid #2ecc71';inp.style.background='#d5f5e3';document.getElementById('spF').innerHTML='<span style="color:#2ecc71">🎉 Correct!</span>';speak("Great job!");setTimeout(()=>{if(sp.i+1>=gameWords.length)finish(sp.s);else{sp.i++;r2();setTimeout(()=>speak(gameWords[sp.i]),300);}},1200);}
-  else{inp.style.border='3px solid #e74c3c';inp.style.background='#fadbd8';document.getElementById('spF').innerHTML='<span style="color:#e74c3c">Not quite — try again! 💪</span>';speak("Try again!");setTimeout(()=>{inp.style.border='3px solid #dfe6e9';inp.style.background='#fff';document.getElementById('spF').textContent='';},1000);}
+  if(inp.value.trim().toLowerCase()===w.toLowerCase()){rec(w,true,true);sp.s++;inp.style.border='3px solid #2ecc71';inp.style.background='#d5f5e3';document.getElementById('spF').innerHTML='<span style="color:#2ecc71">🎉 Correct!</span>';speak("Great job!");setTimeout(()=>{if(sp.i+1>=gameWords.length)finish(sp.s);else{sp.i++;r2();setTimeout(()=>speak(gameWords[sp.i]),300);}},1200);}
+  else{rec(w,false);inp.style.border='3px solid #e74c3c';inp.style.background='#fadbd8';document.getElementById('spF').innerHTML='<span style="color:#e74c3c">Not quite — try again! 💪</span>';speak("Try again!");setTimeout(()=>{inp.style.border='3px solid #dfe6e9';inp.style.background='#fff';document.getElementById('spF').textContent='';},1000);}
 }
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&!document.getElementById('gameScreen').classList.contains('hidden')&&currentGame==='spelling')c2();});
 
@@ -238,7 +330,7 @@ function r4(){
   const w=bl.w[bl.i];
   G.innerHTML=`<p style="font-size:16px;color:#7f8c8d;margin-bottom:8px">Word ${bl.i+1} of ${bl.w.length}</p>${progress(bl.s,bl.w.length)}<div style="font-size:48px;cursor:pointer;margin:12px 0" onclick="speak('${esc(w)}')">🔊</div><p style="font-size:16px;color:#636e72">Tap letters in order!</p><div style="display:flex;gap:8px;justify-content:center;margin:20px 0;min-height:60px;flex-wrap:wrap">${bl.a.map(l=>`<div onclick="b4r('${l.id}')" style="width:48px;height:56px;border-radius:12px;background:linear-gradient(135deg,#a8edea,#fed6e3);display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:600;cursor:pointer">${l.c}</div>`).join('')}${Array.from({length:w.length-bl.a.length}).map(()=>'<div style="width:48px;height:56px;border-radius:12px;border:3px dashed #dfe6e9"></div>').join('')}</div><div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">${bl.l.map(l=>`<div onclick="b4a('${l.id}')" style="width:52px;height:58px;border-radius:14px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:600;cursor:pointer">${l.c}</div>`).join('')}</div><p id="b4F" style="font-size:24px;margin-top:20px"></p>`;
 }
-function b4a(id){const l=bl.l.find(x=>x.id===id);if(!l)return;bl.a.push(l);bl.l=bl.l.filter(x=>x.id!==id);r4();const w=bl.w[bl.i];if(bl.a.length===w.length){if(bl.a.map(x=>x.c).join('')===w){bl.s++;document.getElementById('b4F').innerHTML='<span style="color:#2ecc71">🎉 Perfect!</span>';speak("Awesome!");setTimeout(()=>{if(bl.i+1>=bl.w.length)finish(bl.s);else{bl.i++;s4();}},1200);}else{document.getElementById('b4F').innerHTML='<span style="color:#e74c3c">Oops! Try again! 💪</span>';setTimeout(s4,1000);}}}
+function b4a(id){const l=bl.l.find(x=>x.id===id);if(!l)return;bl.a.push(l);bl.l=bl.l.filter(x=>x.id!==id);r4();const w=bl.w[bl.i];if(bl.a.length===w.length){if(bl.a.map(x=>x.c).join('')===w){rec(w,true);bl.s++;document.getElementById('b4F').innerHTML='<span style="color:#2ecc71">🎉 Perfect!</span>';speak("Awesome!");setTimeout(()=>{if(bl.i+1>=bl.w.length)finish(bl.s);else{bl.i++;s4();}},1200);}else{rec(w,false);document.getElementById('b4F').innerHTML='<span style="color:#e74c3c">Oops! Try again! 💪</span>';setTimeout(s4,1000);}}}
 function b4r(id){const l=bl.a.find(x=>x.id===id);if(!l)return;bl.l.push(l);bl.a=bl.a.filter(x=>x.id!==id);r4();}
 
 // ===== 5. WORD BINGO =====
@@ -248,7 +340,7 @@ function b5n(){if(bg.words.length===0||bg.found.length===bg.grid.length){finish(
 function r5(){
   G.innerHTML=`<p style="font-size:16px;color:#7f8c8d;margin-bottom:8px">Find the word you hear!</p>${progress(bg.found.length,bg.grid.length)}<button class="btn" style="background:#45B7D1;margin:12px 0" onclick="speak('${esc(bg.cur||'')}')">🔊 Hear Again</button><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:360px;margin:16px auto">${bg.grid.map((w,i)=>{const f=bg.found.includes(w);return`<div onclick="b5t(${i})" style="display:flex;align-items:center;justify-content:center;min-height:52px;padding:4px;font-size:16px;font-weight:600;border-radius:12px;cursor:pointer;background:${f?'#d5f5e3':'#fff'};border:2px solid ${f?'#2ecc71':'#dfe6e9'};color:${f?'#2ecc71':'#2d3436'};opacity:${f?.7:1};transition:all .2s">${w}${f?' ✓':''}</div>`;}).join('')}</div><p id="b5F" style="font-size:20px;margin-top:12px"></p>`;
 }
-function b5t(i){const w=bg.grid[i];if(bg.found.includes(w))return;if(w===bg.cur){bg.found.push(w);document.getElementById('b5F').innerHTML='<span style="color:#2ecc71">🎉 Found it!</span>';speak("Great job!");setTimeout(b5n,1200);}else{document.getElementById('b5F').innerHTML='<span style="color:#e74c3c">Try another! 👀</span>';setTimeout(()=>{const e=document.getElementById('b5F');if(e)e.textContent='';},800);}}
+function b5t(i){const w=bg.grid[i];if(bg.found.includes(w))return;if(w===bg.cur){rec(w,true);bg.found.push(w);document.getElementById('b5F').innerHTML='<span style="color:#2ecc71">🎉 Found it!</span>';speak("Great job!");setTimeout(b5n,1200);}else{rec(bg.cur,false);document.getElementById('b5F').innerHTML='<span style="color:#e74c3c">Try another! 👀</span>';setTimeout(()=>{const e=document.getElementById('b5F');if(e)e.textContent='';},800);}}
 
 // ===== 7. MISSING LETTER =====
 let ms;
@@ -260,7 +352,7 @@ function r7(){
   const choices=shuffle([ms.ans,...shuffle(wrong).slice(0,3)]);
   G.innerHTML=`<p style="font-size:16px;color:#7f8c8d;margin-bottom:8px">Word ${ms.i+1} of ${ms.w.length}</p>${progress(ms.s,ms.w.length)}<div style="font-size:48px;cursor:pointer;margin:16px 0" onclick="speak('${esc(w)}')">🔊</div><p style="font-size:18px;color:#636e72;margin-bottom:20px">Which letter is missing?</p><div id="m7W" style="font-size:48px;font-weight:700;color:#2d3436;letter-spacing:8px;margin-bottom:24px">${display}</div><div id="m7C" style="display:flex;gap:12px;justify-content:center">${choices.map(c=>`<button onclick="m7('${c}')" style="width:60px;height:60px;border-radius:16px;border:3px solid #dfe6e9;background:#fff;font-size:28px;font-weight:700;color:#2d3436;cursor:pointer;font-family:'Fredoka',sans-serif">${c}</button>`).join('')}</div><p id="m7F" style="font-size:20px;margin-top:16px"></p>`;
 }
-function m7(c){if(c===ms.ans){ms.s++;const w=ms.w[ms.i];const el=document.getElementById('m7W');el.innerHTML=w.split('').map((ch,i)=>i===ms.pos?'<span style="color:#2ecc71;text-decoration:underline">'+ch+'</span>':ch).join('');document.getElementById('m7C').innerHTML='';document.getElementById('m7F').innerHTML='<span style="color:#2ecc71">🎉 Correct!</span>';speak(w);setTimeout(()=>{if(ms.i+1>=ms.w.length)finish(ms.s);else{ms.i++;r7();}},1500);}else{document.getElementById('m7F').innerHTML='<span style="color:#e74c3c">Try another! 💪</span>';setTimeout(()=>{const e=document.getElementById('m7F');if(e)e.textContent='';},800);}}
+function m7(c){rec(ms.w[ms.i],c===ms.ans);if(c===ms.ans){ms.s++;const w=ms.w[ms.i];const el=document.getElementById('m7W');el.innerHTML=w.split('').map((ch,i)=>i===ms.pos?'<span style="color:#2ecc71;text-decoration:underline">'+ch+'</span>':ch).join('');document.getElementById('m7C').innerHTML='';document.getElementById('m7F').innerHTML='<span style="color:#2ecc71">🎉 Correct!</span>';speak(w);setTimeout(()=>{if(ms.i+1>=ms.w.length)finish(ms.s);else{ms.i++;r7();}},1500);}else{document.getElementById('m7F').innerHTML='<span style="color:#e74c3c">Try another! 💪</span>';setTimeout(()=>{const e=document.getElementById('m7F');if(e)e.textContent='';},800);}}
 
 // ===== 8. SPEED READ =====
 let sd;
@@ -284,17 +376,14 @@ function s8pick(){
 }
 function s8ans(btn,picked){
   if(!sd.active)return;sd.active=false;
-  const w=sd.words[sd.i];
+  const w=sd.words[sd.i];rec(w,picked===w);
   if(picked===w){sd.s++;btn.style.background='#d5f5e3';btn.style.border='3px solid #2ecc71';document.getElementById('sdF').innerHTML='<span style="color:#2ecc71">⭐ You read it!</span>';speak(w);setTimeout(()=>{sd.i++;s8();},900);}
   else{btn.style.background='#fadbd8';btn.style.border='3px solid #e74c3c';document.getElementById('sdF').innerHTML='<span style="color:#e74c3c">It was \"'+w+'\"</span>';speak(w);setTimeout(()=>{sd.i++;s8();},1500);}
 }
 
 // ===== 9. READ TO ME =====
 let rd;
-function g9(){
-  const av=getWords().map(w=>w.toLowerCase());
-  const valid=SENTENCES.filter(s=>s.every(w=>av.includes(w.toLowerCase())||['the','a','an','to','is','not','and','they','we'].includes(w.toLowerCase())));
-  rd={i:0,sen:shuffle(valid.length>0?valid:SENTENCES).slice(0,8)};r9();}
+function g9(){rd={i:0,sen:gameWords.filter(w=>SENT[w]).slice(0,8).map(w=>SENT[w].split(' '))};r9();}
 function r9(){
   const s=rd.sen[rd.i];
   G.innerHTML=`<p style="font-size:16px;color:#7f8c8d;margin-bottom:8px">Sentence ${rd.i+1} of ${rd.sen.length}</p><p style="font-size:18px;color:#636e72;margin:16px 0">Try to read this out loud! 🗣️</p><div style="background:#fff;border-radius:20px;padding:24px;margin:20px auto;max-width:380px;box-shadow:0 8px 30px rgba(0,0,0,.08)"><p style="font-size:32px;font-weight:600;color:#2d3436;line-height:1.4">${s.join(' ')}</p></div><div style="display:flex;gap:12px;justify-content:center;margin-top:20px"><button class="btn" style="background:#45B7D1;font-size:18px" onclick="speak('${esc(s.join(' '))}')">🔊 Hear it</button>${rd.i+1<rd.sen.length?`<button class="btn" style="background:#2ecc71;font-size:18px" onclick="rd.i++;r9()">Next ➡️</button>`:`<button class="btn" style="background:#2ecc71;font-size:18px" onclick="finish(rd.sen.length)">🏆 Done!</button>`}</div><div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:20px">${s.map(w=>`<span onclick="speak('${esc(w)}')" style="font-size:16px;padding:6px 12px;border-radius:10px;background:#f0f0f0;color:#636e72;cursor:pointer">🔊 ${w}</span>`).join('')}</div>`;
@@ -312,7 +401,7 @@ function r10(){
   const cats=Object.keys(ct.cats),rem=ct.pool.filter(w=>!cats.some(c=>ct.placed[c].find(p=>p.w===w.w)));
   G.innerHTML=`<p style="font-size:18px;color:#636e72;margin:12px 0">Tap a word, then tap its group!</p>${progress(ct.s,ct.pool.length)}<div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:16px 0">${rem.map(w=>`<span onclick="c10s('${esc(w.w)}')" style="font-size:18px;padding:8px 14px;border-radius:12px;background:${ct.drag===w.w?'#ffeaa7':'linear-gradient(135deg,#667eea,#764ba2)'};color:${ct.drag===w.w?'#2d3436':'#fff'};font-weight:600;cursor:pointer">${w.w}</span>`).join('')}</div>${cats.map(c=>`<div onclick="c10d('${esc(c)}')" style="min-height:70px;border-radius:16px;padding:10px;margin:8px auto;max-width:380px;display:flex;flex-wrap:wrap;gap:6px;align-content:flex-start;background:${ct.drag?'#fff3cd':'#f8f9fa'};border:2px ${ct.drag?'dashed #f39c12':'solid #dfe6e9'};cursor:pointer"><p style="font-size:14px;font-weight:600;color:#636e72;width:100%;margin-bottom:4px">📦 ${c}</p>${ct.placed[c].map(w=>`<span style="font-size:16px;padding:4px 10px;border-radius:8px;background:#d5f5e3;color:#2d3436">${w.w} ✓</span>`).join('')}</div>`).join('')}<p id="c10F" style="font-size:20px;margin-top:12px"></p>`;
 }
-function c10s(w){ct.drag=ct.drag===w?null:w;r10();}
+function c10s(w){ct.drag=ct.drag===w?null:w;if(ct.drag)speak(w);r10();}
 function c10d(cat){
   if(!ct.drag)return;const wp=ct.pool.find(w=>w.w===ct.drag);if(!wp)return;
   if(wp.cat===cat){ct.placed[cat].push(wp);ct.s++;ct.drag=null;speak("Great!");
@@ -337,7 +426,7 @@ function r11(){
   G.innerHTML=`<p style="font-size:16px;color:#7f8c8d;margin-bottom:8px">Word ${wr.i+1} of ${wr.w.length}</p>${progress(wr.s,wr.w.length)}<div style="font-size:48px;cursor:pointer;margin:16px 0" onclick="speak('${esc(target)}')">🔊</div><p style="font-size:18px;color:#636e72;margin:8px 0">Tap the word you heard!</p><div style="display:flex;gap:16px;justify-content:center;margin:24px 0">${pair.map(w=>`<button onclick="r11tap(this,'${esc(w)}','${esc(target)}')" style="padding:20px 32px;border-radius:20px;border:3px solid #dfe6e9;background:#fff;font-size:32px;font-weight:700;color:#2d3436;cursor:pointer;font-family:'Fredoka',sans-serif;min-width:130px;transition:all .2s">${w}</button>`).join('')}</div><p id="r11F" style="font-size:22px;margin-top:16px"></p>`;
 }
 function r11tap(btn,picked,target){
-  const ms=Date.now()-wr.start;
+  const ms=Date.now()-wr.start;rec(target,picked===target);
   if(picked===target){
     wr.s++;wr.totalTime+=ms;
     btn.style.background='#d5f5e3';btn.style.border='3px solid #2ecc71';btn.style.transform='scale(1.1)';
@@ -394,7 +483,7 @@ function p12animate(){
     if(el){el.style.left=b.x+'%';el.style.top=b.y+'%';}
   }
   if(!anyVisible){
-    pw.done=true;cancelAnimationFrame(pw.raf);
+    pw.done=true;cancelAnimationFrame(pw.raf);rec(pw.target,false);
     const f=document.getElementById('p12F');
     if(f)f.innerHTML='<span style="color:#e74c3c">⏰ Too slow! It was "'+pw.target+'"</span>';
     speak(pw.target);
@@ -409,7 +498,7 @@ function p12tap(id){
   if(!b||b.popped)return;
   const el=document.getElementById(b.id);
   if(b.w===pw.target){
-    pw.done=true;b.popped=true;
+    pw.done=true;b.popped=true;rec(pw.target,true);
     cancelAnimationFrame(pw.raf);
     if(el){el.style.background='#d5f5e3';el.style.border='3px solid #2ecc71';el.style.transform='translate(-50%,-50%) scale(1.3)';}
     pw.s++;
@@ -417,15 +506,101 @@ function p12tap(id){
     speak(pw.target);
     setTimeout(()=>{pw.i++;p12go();},900);
   }else{
-    b.popped=true;
+    b.popped=true;rec(pw.target,false);
     if(el){el.style.opacity='0';el.style.transform='translate(-50%,-50%) scale(0)';el.style.transition='all 0.3s';}
     const f=document.getElementById('p12F');if(f)f.innerHTML='<span style="color:#e74c3c">Not that one!</span>';
     setTimeout(()=>{const f=document.getElementById('p12F');if(f)f.textContent='';},600);
   }
 }
 
+// ===== Shared bits for the newer games =====
+const hdr=(i,n,s)=>`<p style="font-size:16px;color:#7f8c8d;margin-bottom:8px">Word ${i+1} of ${n}</p>${progress(s,n)}`;
+const BIG="padding:18px 28px;border-radius:20px;border:3px solid #dfe6e9;background:#fff;font-size:30px;font-weight:700;color:#2d3436;cursor:pointer;font-family:'Fredoka',sans-serif;min-width:120px;transition:all .2s";
+function intro(emoji,title,body,color,go,label){G.innerHTML=`<div style="max-width:340px;margin:20px auto;text-align:center"><div style="font-size:60px;margin-bottom:16px">${emoji}</div><h2 style="font-size:24px;font-weight:700;color:#2d3436;margin-bottom:16px">${title}</h2><p style="font-size:18px;color:#636e72;line-height:1.6;margin-bottom:24px">${body}</p><button class="btn" style="background:${color};font-size:20px;padding:14px 32px" onclick="${go}">${label}</button></div>`;}
+
+// ===== 13. SAY IT =====
+// No audio until they try: this is the same show-a-word-and-read-it check the teacher does
+let sy;
+function g13(){sy={q:[...gameWords],i:0,s:0,again:new Set(),total:gameWords.length};
+  intro('🗣️','Say It!','A word will pop up.<br>Read it out loud!<br><br><b>Grown-ups:</b> tap ✅ only if<br>they read it without help.','#d35400','r13()','Start Reading 🗣️');}
+function r13(){
+  const w=sy.q[sy.i];
+  G.innerHTML=`<p style="font-size:16px;color:#7f8c8d;margin-bottom:8px">Word ${sy.i+1} of ${sy.q.length}</p>${progress(sy.s,sy.total)}<div style="margin:24px auto;max-width:300px;min-height:180px;border-radius:24px;display:flex;align-items:center;justify-content:center;background:#fff;box-shadow:0 12px 40px rgba(0,0,0,.12)"><span style="font-size:60px;font-weight:700;color:#2d3436">${w}</span></div><p id="syF" style="font-size:20px;min-height:28px;color:#636e72">Read it out loud! 🗣️</p><div id="syB" style="display:flex;gap:14px;justify-content:center;margin-top:12px"><button class="btn" style="background:#2ecc71;font-size:20px" onclick="y13(true)">✅ Read it!</button><button class="btn" style="background:#e67e22;font-size:20px" onclick="y13(false)">🔁 Not yet</button></div>`;
+}
+function y13(ok){
+  const w=sy.q[sy.i];rec(w,ok,true);document.getElementById('syB').innerHTML='';
+  if(ok){if(!sy.again.has(w))sy.s++;document.getElementById('syF').innerHTML='<span style="color:#2ecc71">⭐ Great reading!</span>';}
+  else{speak(w);document.getElementById('syF').innerHTML=`It says <b>${w}</b>. Say it with me!`;
+    // Missed words come back once, a few cards later, while still fresh
+    if(!sy.again.has(w)){sy.again.add(w);sy.q.splice(Math.min(sy.i+4,sy.q.length),0,w);}}
+  setTimeout(()=>{if(++sy.i>=sy.q.length)finish(sy.s);else r13();},ok?700:2200);
+}
+
+// ===== 14. PAPER TEST =====
+// Mirrors the weekly spelling test: dictate word + sentence, write by hand, then a grown-up marks the paper
+let pt;
+function g14(){pt={w:[...gameWords],i:0,miss:new Set()};
+  intro('📝','Paper Test','Get a pencil and paper!<br>I will say each word and<br>use it in a sentence.<br>Write it down, then tap Next.','#2d3436','p14()','Ready! ✏️');}
+function dictate(n){const w=pt.w[n-1];speak(`Number ${n}. ${w}. ${SENT[w]||''} ${w}.`,0.75);}
+function p14(){
+  const n=pt.i+1;
+  G.innerHTML=`${hdr(pt.i,pt.w.length,pt.i)}<div style="font-size:80px;font-weight:700;color:#2d3436;margin:24px 0">#${n}</div><p style="font-size:18px;color:#636e72;margin-bottom:20px">Write word number ${n}! ✏️</p><div style="display:flex;gap:14px;justify-content:center"><button class="btn" style="background:#45B7D1;font-size:18px" onclick="dictate(${n})">🔊 Again</button><button class="btn" style="background:#2ecc71;font-size:18px" onclick="n14()">${n<pt.w.length?'Next ➡️':'Check ✅'}</button></div>`;
+  dictate(n);
+}
+function n14(){if(++pt.i<pt.w.length)p14();else{speechSynthesis.cancel();k14();}}
+function k14(){
+  G.innerHTML=`<h2 style="font-size:24px;font-weight:700;color:#2d3436;margin:8px 0">Check your paper! 🔍</h2><p style="font-size:16px;color:#636e72;margin-bottom:16px">Grown-ups: tap each word that was spelled wrong.</p><div style="display:flex;flex-direction:column;gap:8px;max-width:320px;margin:0 auto">${pt.w.map((w,i)=>{const x=pt.miss.has(w);return`<button onclick="t14('${esc(w)}')" style="display:flex;justify-content:space-between;align-items:center;padding:10px 16px;border-radius:14px;border:3px solid ${x?'#e74c3c':'#2ecc71'};background:${x?'#fadbd8':'#d5f5e3'};font-family:'Fredoka',sans-serif;font-size:24px;font-weight:600;color:#2d3436;cursor:pointer"><span>${i+1}. ${w}</span><span>${x?'✗':'✓'}</span></button>`;}).join('')}</div><button class="btn" style="background:#667eea;font-size:20px;margin-top:20px" onclick="s14()">💾 Save</button>`;
+}
+function t14(w){pt.miss.has(w)?pt.miss.delete(w):pt.miss.add(w);k14();}
+function s14(){pt.w.forEach(w=>rec(w,!pt.miss.has(w),true));finish(pt.w.length-pt.miss.size);}
+
+// ===== 15. MAGIC E =====
+let mg;
+function g15(){mg={p:shuffle(phon('magic').flat()).slice(0,8),i:0,s:0,done:false};
+  intro('🪄','Magic E','A silent e at the end<br>makes the vowel say its name!<br><br>rod ➜ rod<b style="color:#8e44ad">e</b>','#8e44ad','r15()','Make Magic! 🪄');}
+function r15(){
+  const[a]=mg.p[mg.i];mg.done=false;
+  G.innerHTML=`${hdr(mg.i,mg.p.length,mg.s)}<div id="mgW" style="font-size:64px;font-weight:700;color:#2d3436;margin:30px 0">${a}</div><p id="mgT" style="font-size:18px;color:#636e72;margin-bottom:16px">This says <b>${a}</b>. Now add the magic e!</p><div id="mgB"><button class="btn" style="background:#8e44ad;font-size:22px" onclick="e15()">🪄 Add magic e</button></div>`;
+  speak(a);
+}
+function e15(){const[a,b]=mg.p[mg.i];document.getElementById('mgW').innerHTML=`${a}<span style="color:#8e44ad">e</span>`;document.getElementById('mgT').innerHTML=`Now it says <b>${b}</b>!`;document.getElementById('mgB').innerHTML='';speak(b);setTimeout(q15,1800);}
+function q15(){
+  const pair=mg.p[mg.i];mg.t=pair[Math.random()<.5?0:1];
+  G.innerHTML=`${hdr(mg.i,mg.p.length,mg.s)}<div style="font-size:48px;cursor:pointer;margin:16px 0" onclick="speak(mg.t)">🔊</div><p style="font-size:18px;color:#636e72">Which word did you hear?</p><div style="display:flex;gap:16px;justify-content:center;margin:24px 0">${shuffle(pair).map(w=>`<button onclick="a15(this,'${w}')" style="${BIG}">${w}</button>`).join('')}</div><p id="mgF" style="font-size:22px"></p>`;
+  speak(mg.t);
+}
+function a15(btn,w){
+  if(mg.done)return;mg.done=true;const ok=w===mg.t;if(ok)mg.s++;
+  btn.style.background=ok?'#d5f5e3':'#fadbd8';btn.style.border=`3px solid ${ok?'#2ecc71':'#e74c3c'}`;
+  document.getElementById('mgF').innerHTML=ok?'<span style="color:#2ecc71">🎉 Yes!</span>':`<span style="color:#e74c3c">It was ${mg.t}</span>`;
+  speak(mg.t);setTimeout(()=>{if(++mg.i>=mg.p.length)finish(mg.s);else r15();},1400);
+}
+
+// ===== 16. PATTERN SORT (reuses Word Sort's board) =====
+function g16(){
+  const cats={},pool=[];
+  phon('sort').forEach(g=>Object.entries(g).forEach(([c,ws])=>{cats[c]=[];ws.forEach(w=>pool.push({w,cat:c}));}));
+  ct={s:0,cats,pool:shuffle(pool),placed:{},drag:null};Object.keys(cats).forEach(c=>ct.placed[c]=[]);r10();
+}
+
+// ===== 17. FILL THE GAP =====
+let cz;
+function g17(){cz={w:gameWords.filter(w=>SENT[w]).slice(0,10),i:0,s:0};r17();}
+function r17(){
+  const w=cz.w[cz.i];cz.done=false;cz.missed=false;
+  const blank=SENT[w].replace(wordRe(w),'$1<span id="czB" style="display:inline-block;min-width:80px;border-bottom:4px solid #c0392b">&nbsp;</span>');
+  // Prefer distractors from the same set so the choice is between words they're actually learning
+  const others=[...shuffle(gameWords.filter(x=>x!==w)),...shuffle(allWords().filter(x=>x!==w&&!gameWords.includes(x)))].slice(0,2);
+  G.innerHTML=`${hdr(cz.i,cz.w.length,cz.s)}<p style="font-size:18px;color:#636e72;margin:12px 0">Which word finishes the sentence?</p><div style="background:#fff;border-radius:20px;padding:24px;margin:16px auto;max-width:380px;box-shadow:0 8px 30px rgba(0,0,0,.08)"><p style="font-size:30px;font-weight:600;color:#2d3436;line-height:1.5">${blank}</p></div><div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:20px 0">${shuffle([w,...others]).map(c=>`<button onclick="a17(this,'${esc(c)}')" style="${BIG}">${c}</button>`).join('')}</div><p id="czF" style="font-size:22px"></p>`;
+}
+function a17(btn,c){
+  if(cz.done||btn.disabled)return;const w=cz.w[cz.i];rec(w,c===w);
+  if(c===w){cz.done=true;if(!cz.missed)cz.s++;document.getElementById('czB').outerHTML=`<span style="color:#2ecc71;text-decoration:underline">${SENT[w].match(wordRe(w))[2]}</span>`;btn.style.background='#d5f5e3';btn.style.border='3px solid #2ecc71';document.getElementById('czF').innerHTML='<span style="color:#2ecc71">🎉 You got it!</span>';speak(SENT[w]);setTimeout(()=>{if(++cz.i>=cz.w.length)finish(cz.s);else r17();},2400);}
+  else{cz.missed=true;btn.disabled=true;btn.style.background='#fadbd8';btn.style.border='3px solid #e74c3c';btn.style.opacity='.6';document.getElementById('czF').innerHTML='<span style="color:#e74c3c">Try another! 💪</span>';}
+}
+
 // INIT
-renderHome();
+showProfiles();
 </script>
 </body>
 </html>

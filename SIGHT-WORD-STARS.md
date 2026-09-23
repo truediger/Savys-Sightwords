@@ -189,14 +189,21 @@ Source: Frazier Elementary High-Frequency Word List + Kindergarten Sight Words b
 - Added Week 21: brown, few, funny, myself, new, once, thank, words
 - All 10 games work with both grade levels
 
+### v6 — Kids, Progress & Learning Modes
+- Who's practicing? Savvy and Logan each keep their own grade, lists, word progress and streak (saved on the device)
+- Every game records the first answer per word; spaced review brings words back after 1, 2, 4, 7, 14 days
+- Only reading or spelling a word unprompted (Say It, Flashcards, Spelling Bee, Paper Test) marks it known; pick-the-word games alone can't
+- ☀️ Today's Practice: new/tricky words mixed between easier ones, plus words due for review
+- 🔥 Tricky Words chip and colored word chips (known / learning / tricky / new)
+- New games: 🗣️ Say It!, 📝 Paper Test (dictation + grown-up marking), 🪄 Magic E, 🗂️ Pattern Sort, 💬 Fill the Gap
+- Fixed Read to Me (its sentence list had been removed); one sentence per word now powers Read to Me, Fill the Gap and dictation
+- Opens on the newest weekly list; remembers each kid's selection and the chosen voice
+
 ---
 
 ## Future Ideas
 
 - **Custom Word Lists** — Add words, name the list, share via URL code
-- **Score Tracking** — Save results per game to localStorage
-- **Word Mastery** — Track missed words, auto-build "Words to Practice" list
-- **Streak Tracker** — Days played in a row
 
 ---
 
