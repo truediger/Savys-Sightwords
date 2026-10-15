@@ -305,10 +305,11 @@ function n1(){fc.f=false;if(fc.i+1>=gameWords.length)finish(fc.s);else{fc.i++;se
 
 // ===== 2. SPELLING =====
 let sp;
-function g2(){sp={i:0,s:0,a:'',lock:false};r2();setTimeout(()=>speak(gameWords[0]),300);}
+function g2(){sp={i:0,s:0,a:'',lock:false,draw:currentGrade==='2'};r2();setTimeout(()=>speak(gameWords[0]),300);}
 // On-screen ABC keys instead of a text input: the phone QWERTY keyboard is too hard for young kids.
 const KEYS=[..."abcdefghijklmnopqrstuvwxyz'"];
 function r2(){
+  if(sp.draw)return d2();
   const w=gameWords[sp.i];sp.a='';sp.lock=false;
   const key=k=>`<button data-k="${k}" onclick="k2(this.dataset.k)" style="font-family:'Fredoka',sans-serif;font-size:26px;font-weight:600;height:52px;border:none;border-radius:12px;background:#fff;color:#2d3436;box-shadow:0 3px 0 #dfe6e9;cursor:pointer;touch-action:manipulation;padding:0">${k}</button>`;
   G.innerHTML=`<p style="font-size:16px;color:#7f8c8d;margin-bottom:8px">Word ${sp.i+1} of ${gameWords.length}</p>${progress(sp.s,gameWords.length)}<div style="font-size:56px;cursor:pointer;margin:8px 0" onclick="speak('${esc(w)}')">🔊</div><p style="font-size:18px;color:#636e72;margin-bottom:12px">Listen and spell the word!</p><div id="spH" class="hidden" style="font-size:28px;color:#b2bec3;letter-spacing:8px;margin-bottom:12px"></div><div id="spI" style="font-size:36px;font-weight:600;letter-spacing:2px;text-align:center;padding:10px 20px;min-height:68px;border-radius:16px;border:3px solid #dfe6e9;width:100%;max-width:280px;margin:0 auto;background:#fff;color:#2d3436"></div><p id="spF" style="font-size:22px;min-height:32px;margin:8px 0"></p><div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;max-width:380px;margin:0 auto">${KEYS.map(key).join('')}<button onclick="k2('Backspace')" aria-label="Delete" style="font-size:24px;height:52px;border:none;border-radius:12px;background:#fab1a0;color:#fff;box-shadow:0 3px 0 #e17055;cursor:pointer;touch-action:manipulation">⌫</button></div><div style="display:flex;gap:12px;justify-content:center;margin-top:16px"><button class="btn" style="background:#45B7D1" onclick="speak('${esc(w)}')">🔊 Again</button><button class="btn" style="background:#f39c12" onclick="document.getElementById('spH').textContent='${w[0]+w.slice(1).replace(/./g,' _')}';document.getElementById('spH').classList.remove('hidden')">💡 Hint</button><button class="btn" style="background:#2ecc71" onclick="c2()">✅ Check</button></div>`;
@@ -325,8 +326,42 @@ function c2(){
   if(sp.a.toLowerCase()===w.toLowerCase()){sp.lock=true;rec(w,true,true);sp.s++;inp.style.border='3px solid #2ecc71';inp.style.background='#d5f5e3';document.getElementById('spF').innerHTML='<span style="color:#2ecc71">🎉 Correct!</span>';speak("Great job!");setTimeout(()=>{if(sp.i+1>=gameWords.length)finish(sp.s);else{sp.i++;r2();setTimeout(()=>speak(gameWords[sp.i]),300);}},1200);}
   else{rec(w,false);inp.style.border='3px solid #e74c3c';inp.style.background='#fadbd8';document.getElementById('spF').innerHTML='<span style="color:#e74c3c">Not quite — try again! 💪</span>';speak("Try again!");setTimeout(()=>{inp.style.border='3px solid #dfe6e9';inp.style.background='#fff';document.getElementById('spF').textContent='';},1000);}
 }
-// Physical keyboards (laptop/tablet) still work.
-document.addEventListener('keydown',e=>{if(document.getElementById('gameScreen').classList.contains('hidden')||currentGame!=='spelling')return;if(e.key==='Enter')c2();else if(e.key==='Backspace'){e.preventDefault();k2('Backspace');}else if(/^[a-z']$/i.test(e.key)&&!e.metaKey&&!e.ctrlKey)k2(e.key.toLowerCase());});
+// 2nd grade writes the word with a finger and self-checks: iOS Safari has no handwriting recognition.
+function d2(){
+  const w=gameWords[sp.i];sp.lock=false;
+  G.innerHTML=`<p style="font-size:16px;color:#7f8c8d;margin-bottom:8px">Word ${sp.i+1} of ${gameWords.length}</p>${progress(sp.s,gameWords.length)}<div style="font-size:56px;cursor:pointer;margin:8px 0" onclick="speak('${esc(w)}')">🔊</div><p style="font-size:18px;color:#636e72;margin-bottom:12px">Listen and write the word!</p><div id="spH" class="hidden" style="font-size:28px;color:#b2bec3;letter-spacing:8px;margin-bottom:12px"></div><div style="position:relative;max-width:340px;margin:0 auto"><canvas id="spC" style="display:block;width:100%;height:170px;border-radius:16px;border:3px solid #dfe6e9;background:#fff;touch-action:none"></canvas><button onclick="clr2()" aria-label="Erase" style="position:absolute;top:8px;right:8px;font-size:22px;width:44px;height:44px;border:none;border-radius:12px;background:#f1f2f6;cursor:pointer">🧽</button></div><div id="spB" style="display:flex;gap:12px;justify-content:center;margin-top:16px"><button class="btn" style="background:#45B7D1" onclick="speak('${esc(w)}')">🔊 Again</button><button class="btn" style="background:#f39c12" onclick="document.getElementById('spH').textContent='${w[0]+w.slice(1).replace(/./g,' _')}';document.getElementById('spH').classList.remove('hidden')">💡 Hint</button><button class="btn" style="background:#2ecc71" onclick="ck2()">✅ Check</button></div><div id="spA"></div>`;
+  const c=document.getElementById('spC'),r=c.getBoundingClientRect(),dpr=window.devicePixelRatio||1;
+  c.width=r.width*dpr;c.height=r.height*dpr;const x=c.getContext('2d');x.scale(dpr,dpr);
+  sp.cv={x,w:r.width,h:r.height};clr2();
+  let on=false;const pt=e=>{const b=c.getBoundingClientRect();return[e.clientX-b.left,e.clientY-b.top];};
+  c.onpointerdown=e=>{if(sp.lock)return;on=true;c.setPointerCapture(e.pointerId);const[a,b]=pt(e);x.beginPath();x.moveTo(a,b);x.lineTo(a+.1,b);x.stroke();sp.ink=true;};
+  c.onpointermove=e=>{if(!on)return;const[a,b]=pt(e);x.lineTo(a,b);x.stroke();};
+  c.onpointerup=c.onpointercancel=()=>{on=false;};
+}
+function clr2(){
+  const{x,w,h}=sp.cv;x.clearRect(0,0,w,h);x.lineWidth=2;
+  // Handwriting-paper guides: top line, dashed midline, baseline.
+  for(const[y,d,col]of[[.18,[],'#74b9ff'],[.49,[8,8],'#b2bec3'],[.8,[],'#ff7675']]){x.strokeStyle=col;x.setLineDash(d);x.beginPath();x.moveTo(10,h*y);x.lineTo(w-10,h*y);x.stroke();}
+  x.setLineDash([]);x.strokeStyle='#2d3436';x.lineWidth=7;x.lineCap=x.lineJoin='round';sp.ink=false;
+}
+function ck2(){
+  if(sp.lock||!sp.ink)return;sp.lock=true;const w=gameWords[sp.i];
+  document.getElementById('spB').classList.add('hidden');
+  const a=document.getElementById('spA');
+  a.innerHTML=`<p style="color:#636e72;font-size:16px;margin-top:12px">The word is</p><div style="font-size:48px;font-weight:600;color:#2d3436;letter-spacing:3px">${w}</div><p style="font-size:18px;color:#636e72;margin:4px 0 10px">Did you spell it right?</p><div style="display:flex;gap:12px;justify-content:center"><button class="btn" style="background:#2ecc71;font-size:20px" onclick="ok2(true)">👍 Yes!</button><button class="btn" style="background:#e74c3c;font-size:20px" onclick="ok2(false)">✏️ Not yet</button></div>`;
+  a.scrollIntoView({behavior:'smooth',block:'nearest'});
+  speak(w+'. '+[...w].join(', ')+'.',0.8);
+}
+function ok2(y){
+  const w=gameWords[sp.i],a=document.getElementById('spA');
+  if(y){rec(w,true,true);sp.s++;a.innerHTML='<p style="font-size:24px;color:#2ecc71;margin-top:12px">🎉 Great job!</p>';speak("Great job!");setTimeout(n2,1000);return;}
+  // Miss: copy it once correctly while the answer stays visible, no star.
+  rec(w,false);clr2();sp.lock=false;
+  a.innerHTML=`<p style="color:#636e72;font-size:16px;margin-top:12px">Copy it once:</p><div style="font-size:48px;font-weight:600;color:#2d3436;letter-spacing:3px">${w}</div><button class="btn" style="background:#6c5ce7;font-size:20px;margin-top:8px" onclick="n2()">Next ➡️</button>`;
+}
+function n2(){if(sp.i+1>=gameWords.length)finish(sp.s);else{sp.i++;r2();setTimeout(()=>speak(gameWords[sp.i]),300);}}
+// Physical keyboards (laptop/tablet) still work in letter-key mode.
+document.addEventListener('keydown',e=>{if(document.getElementById('gameScreen').classList.contains('hidden')||currentGame!=='spelling'||sp.draw)return;if(e.key==='Enter')c2();else if(e.key==='Backspace'){e.preventDefault();k2('Backspace');}else if(/^[a-z']$/i.test(e.key)&&!e.metaKey&&!e.ctrlKey)k2(e.key.toLowerCase());});
 
 // ===== 3. MEMORY MATCH =====
 let mt;
